@@ -82,13 +82,12 @@ document.addEventListener('DOMContentLoaded', function() {
         submitUserInput(event);
     }); 
 
-    // Add a keydown event listener to the form to allow for submission with the enter key
+    // Add an event listener to the form to detect when the user presses a key
     form.addEventListener('keydown', function(event) {
-        // If the enter key is pressed, submit the form if the ctrl or meta key is also pressed
-        if (event.key === "Enter") {
-            if (event.ctrlKey || event.metaKey) {
-                submitUserInput(event);
-            }
+        // If the user presses the enter key without holding shift, and if the ctrl or meta key is
+        // also pressed, submit the form
+        if (event.key === "Enter" && !event.shiftKey) {
+            submitUserInput(event);
         }
     }); 
 });
