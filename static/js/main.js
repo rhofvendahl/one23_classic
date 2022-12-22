@@ -4,7 +4,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize variables
     let conversation = "";
-    let passcode = "";
+    const passcode = localStorage.getItem("passcode") || "";
 
     // Get the form element
     const form = document.getElementById('form');
@@ -61,8 +61,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 alert("Passcode incorrect.");
                 document.getElementById("prompt").innerHTML = "Passcode incorrect.";
                 passcode = "";
+                localStorage.setItem("passcode", null);
                 return;
             }
+            localStorage.setItem("passcode", passcode);
 
             // Update the conversation and moderation text
             conversation = responseJson.conversation;
