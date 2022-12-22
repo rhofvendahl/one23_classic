@@ -4,7 +4,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize variables
     let conversation = "";
-    const passcode = localStorage.getItem("passcode") || "";
+    let passcode = localStorage.getItem("passcode") || "";
 
     // Get the form element
     const form = document.getElementById('form');
