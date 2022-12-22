@@ -6,8 +6,10 @@ import openai
 from dotenv import load_dotenv
 load_dotenv()
 
+# Set the OpenAI API key
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
+# Create a Flask app
 app = Flask(__name__)
 
 @app.route('/')
@@ -21,31 +23,29 @@ def process_input():
     # Get the user input from the form
     request_data = request.get_json()
 
+    # Get the passcode from the request data
     passcode = request_data["passcode"]
-    print(request_data)
 
-    print("PASSCODE TYPE", passcode, type(passcode))
-    print("OSPASSCODE TYPE", os.getenv("PASSCODE"), type(os.getenv("PASSCODE")))
+    # If the passcode is incorrect, return a JSON object with passcode_correct set to False
     if passcode != os.getenv("PASSCODE"):
         return jsonify({
             "passcode_correct": False,
         })
 
+    # Get the conversation and user input from the request data
     conversation = request_data["conversation"]
     user_input = request_data['user_input'].strip()
 
+    # Moderate the user input
     mod = openai.Moderation.create(
         input=user_input
     )
-    print(mod)
     
-    # Don't start a conversation with "User: " or chat will respond with some variation of "Robot: "
-    # Instead, wait until a pattern can be established with at least one "Human" and "AI".
-    # conversation = conversation + "User: " + user_input + "AI: "
+    # If the conversation is empty, start a new conversation with the user input
     if conversation == "":
         conversation = "User: " + user_input + "\n\nAI: "
     else:
-        # Might have to change depending on whether AI wants to continue after "AI" or go ahead and add that
+        # If the conversation is not empty, add the user input to the conversation
         conversation = conversation + "\n\nUser: " + user_input + "\n\nAI: "
 
     # Make a request to the OpenAI API for text-davinci-003 (DAVINCI3) model
@@ -63,6 +63,7 @@ def process_input():
     # Get the API's response
     response_text = response["choices"][0]["text"]
 
+    # Add the API's response to the conversation
     conversation = conversation + response_text.strip()
  
     # Return the API's response to the frontend
