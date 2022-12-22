@@ -53,7 +53,7 @@ def process_input():
         model="text-davinci-003",
         prompt=conversation,
         temperature=0.7,
-        max_tokens=1024,
+        max_tokens=2048,
         top_p=1,
         frequency_penalty=0,
         presence_penalty=0,
