@@ -1,0 +1,29 @@
+<!-- index.html -->
+
+<!doctype html>
+<html>
+  <head>
+    <title>APP</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  </head>
+  <body>
+    <div id="content-wrapper">
+      <h1>Welcome to APP</h1>
+      <!-- <p>Here is some text-based content about sex education and wellness.</p> -->
+      <!-- <p>Here is the conversation so far:</p> -->
+      <div id="conversation"></div>
+  
+      <!-- Form for user input -->
+      <p id="prompt">Enter a message:</p><br>
+      <form id="form">
+        <textarea id="user-input" type="text" id="user-input" name="user-input" rows="8"></textarea><br>
+        <input id="submit" type="submit" value="Submit">
+      </form> 
+      <br>
+      <div id="moderation"></div>
+      <!-- Div to display the API's response -->
+      <!-- <div id="text-field"></div> -->
+    </div>
+  </body>
+</html>

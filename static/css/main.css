@@ -1,0 +1,44 @@
+/* main.css */
+
+body {
+  font-family: Arial, sans-serif;
+}
+
+@media (min-width: 600px) {
+  #content-wrapper {
+    margin-left: 20%;
+    margin-right: 20%;
+    margin-top: 8rem;
+  }
+}
+@media (max-width: 600px) {
+  #content-wrapper {
+    margin-top: 2rem;
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+#user-input {
+  padding: 0.5em;
+  font-size: 1em;
+}
+
+#submit {
+  margin-top: 0.5em;
+  padding: 0.5em;
+  font-size: 1em;
+}
+
+#conversation {
+  white-space: pre-wrap;
+}
+
+#moderation {
+  white-space: pre-wrap;
+}
