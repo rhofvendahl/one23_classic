@@ -48,7 +48,7 @@ def process_input():
         conversation = f"User:{user_ws}{user_input}\n\nAI:"
     else:
         # If the conversation is not empty, add the user input to the conversation
-        conversation = conversation + "\n\nUser: " + user_input + "\n\nAI: "
+        conversation = conversation + "\n\nUser: " + user_input + "\n\nAI:"
 
     # Make a request to the OpenAI API for text-davinci-003 (DAVINCI3) model
     response = openai.Completion.create(
