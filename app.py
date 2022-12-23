@@ -40,10 +40,12 @@ def process_input():
     mod = openai.Moderation.create(
         input=user_input
     )
+
+    user_ws = "\n" if "\n" in user_input else " " 
     
     # If the conversation is empty, start a new conversation with the user input
     if conversation == "":
-        conversation = "User: " + user_input + "\n\nAI: "
+        conversation = f"User:{user_ws}{user_input}\n\nAI:"
     else:
         # If the conversation is not empty, add the user input to the conversation
         conversation = conversation + "\n\nUser: " + user_input + "\n\nAI: "
@@ -61,10 +63,13 @@ def process_input():
     )
 
     # Get the API's response
-    response_text = response["choices"][0]["text"]
+    response_text = response["choices"][0]["text"].strip()
+
+    response_ws = "\n" if "\n" in response_text else " " 
+
 
     # Add the API's response to the conversation
-    conversation = conversation + response_text.strip()
+    conversation = f"{conversation}{response_ws}{response_text}"
  
     # Return the API's response to the frontend
     return jsonify({
