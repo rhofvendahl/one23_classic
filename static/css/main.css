@@ -40,3 +40,7 @@ form {
 #moderation {
   white-space: pre-wrap;
 }
+
+#prompt {
+  font-style: italic;
+}

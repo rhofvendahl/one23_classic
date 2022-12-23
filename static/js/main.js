@@ -49,7 +49,6 @@ document.addEventListener('DOMContentLoaded', function() {
         promptElement.innerHTML = "Loading..."
         
         // Send the user input to the backend for processing
-        console.log("CONVERSATION ABT TO SEND", conversation);
         fetch('/process_input', {
             method: 'POST',
             headers: {
@@ -77,9 +76,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             let tempConvo = conversation;
             while (tempConvo.length > 0) {
-                console.log("CONVERSATION", tempConvo);
                 const speakerIndex = tempConvo.search(/User:|AI:/);
-                console.log("SPEAKERINDEX", speakerIndex);
 
                 let preSpeaker;
                 let speaker;
@@ -91,8 +88,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     speaker = tempConvo[speakerIndex] === "U" ? "User:" : "AI:";
                     tempConvo = tempConvo.substring(speakerIndex + speaker.length);
                 }
-                console.log("PRESPEAKER", preSpeaker);
-                console.log("SPEAKER", speaker);
                 if (preSpeaker) {
                     let preSpeakerELement = document.createTextNode(preSpeaker);
                     convoElement.appendChild(preSpeakerELement);
@@ -102,7 +97,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     speakerElement.innerHTML = `<b>${speaker}</b>`;
                     convoElement.appendChild(speakerElement);
                 }
-                console.log();
             }
 
             // Update the text field with the API's response
