@@ -49,6 +49,7 @@ document.addEventListener('DOMContentLoaded', function() {
         promptElement.innerHTML = "Loading..."
         
         // Send the user input to the backend for processing
+        console.log("CONVERSATION ABT TO SEND", conversation);
         fetch('/process_input', {
             method: 'POST',
             headers: {
@@ -68,13 +69,44 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             localStorage.setItem("passcode", passcode);
 
+            const convoElement = document.getElementById("conversation");
+            convoElement.innerHTML = "";
+
             // Update the conversation and moderation text
             conversation = responseJson.conversation;
-            boldConvo = responseJson.conversation.split("AI:").join("<b>AI:</b>").split("User:").join("<b>User:</b>");
-            
+
+            let tempConvo = conversation;
+            while (tempConvo.length > 0) {
+                console.log("CONVERSATION", tempConvo);
+                const speakerIndex = tempConvo.search(/User:|AI:/);
+                console.log("SPEAKERINDEX", speakerIndex);
+
+                let preSpeaker;
+                let speaker;
+                if (speakerIndex < 0) {
+                    preSpeaker = tempConvo;
+                    tempConvo = "";
+                } else {
+                    preSpeaker = tempConvo.substring(0, speakerIndex);
+                    speaker = tempConvo[speakerIndex] === "U" ? "User:" : "AI:";
+                    tempConvo = tempConvo.substring(speakerIndex + speaker.length);
+                }
+                console.log("PRESPEAKER", preSpeaker);
+                console.log("SPEAKER", speaker);
+                if (preSpeaker) {
+                    let preSpeakerELement = document.createTextNode(preSpeaker);
+                    convoElement.appendChild(preSpeakerELement);
+                }
+                if (speaker) {
+                    let speakerElement = document.createElement("span");
+                    speakerElement.innerHTML = `<b>${speaker}</b>`;
+                    convoElement.appendChild(speakerElement);
+                }
+                console.log();
+            }
+
             // Update the text field with the API's response
             document.getElementById("prompt").innerHTML = "";
-            document.getElementById('conversation').innerHTML = boldConvo;
             document.getElementById("moderation").innerHTML = getModText(responseJson.moderation);
         });
     }
