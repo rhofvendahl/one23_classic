@@ -9,6 +9,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Get the form element
     const form = document.getElementById('form');
 
+    document.getElementById("user-input").focus();
+
     // Create a function to return the moderation text
     const getModText = (mod) => {
         // Get an array of categories
