@@ -7,9 +7,11 @@ document.addEventListener('DOMContentLoaded', function() {
     let passcode = localStorage.getItem("passcode") || "";
 
     // Get the form element
-    const form = document.getElementById('form');
+    const formElement = document.getElementById('form');
 
-    document.getElementById("user-input").focus();
+    const inputElement = document.getElementById("user-input");
+
+    inputElement.focus();
 
     // Create a function to return the moderation text
     const getModText = (mod) => {
@@ -40,7 +42,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         // Get the user input
-        const inputElement = document.getElementById("user-input");
+        // const inputElement = document.getElementById("user-input");
         const userInput = inputElement.value;
         inputElement.value = "";
 
@@ -106,16 +108,22 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Add a submit event listener to the form
-    form.addEventListener('submit', function(event) {
+    formElement.addEventListener('submit', function(event) {
         submitUserInput(event);
     }); 
 
     // Add an event listener to the form to detect when the user presses a key
-    form.addEventListener('keydown', function(event) {
+    formElement.addEventListener('keydown', function(event) {
         // If the user presses the enter key without holding shift, and if the ctrl or meta key is
         // also pressed, submit the form
         if (event.key === "Enter" && !event.shiftKey) {
             submitUserInput(event);
         }
     }); 
+    
+    inputElement.addEventListener('input', () => {
+
+        inputElement.style.height = 'auto';
+        inputElement.style.height = Math.min(inputElement.scrollHeight, 200) + 'px';
+    });
 });
