@@ -1,7 +1,7 @@
 // main.js
 
 // Wait for the DOM to be ready
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', () => {
     // Initialize variables
     let conversation = "";
     let passcode = localStorage.getItem("passcode") || "";
@@ -108,12 +108,12 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Add a submit event listener to the form
-    formElement.addEventListener('submit', function(event) {
+    formElement.addEventListener('submit', (event) => {
         submitUserInput(event);
     }); 
 
     // Add an event listener to the form to detect when the user presses a key
-    formElement.addEventListener('keydown', function(event) {
+    formElement.addEventListener('keydown', (event) => {
         // If the user presses the enter key without holding shift, and if the ctrl or meta key is
         // also pressed, submit the form
         if (event.key === "Enter" && !event.shiftKey) {
@@ -122,8 +122,21 @@ document.addEventListener('DOMContentLoaded', function() {
     }); 
     
     inputElement.addEventListener('input', () => {
-
         inputElement.style.height = 'auto';
         inputElement.style.height = Math.min(inputElement.scrollHeight, 200) + 'px';
     });
+
+    let modHidden = true;
+    const modToggleElement = document.getElementById("moderation-toggle");
+    const modElement = document.getElementById("moderation");
+    modToggleElement.addEventListener("click", (event) => {
+        console.log("FIRE");
+        if (modHidden) {
+            modToggleElement.innerHTML = "Hide moderation";
+        } else {
+            modToggleElement.innerHTML = "Show moderation";
+        }
+        modElement.hidden = !modHidden;
+        modHidden = !modHidden;
+    }); 
 });

@@ -83,7 +83,14 @@ form {
   color: white;
 }
 
+#moderation-toggle {
+  background-color: transparent;
+  color: #D9DBDB;
+  border: none;
+  padding: 0;
+  margin-bottom: 1rem;
+}
+
 #moderation {
   white-space: pre-wrap;
-  color: #D9DBDB
 }
