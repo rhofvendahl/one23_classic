@@ -1,6 +1,6 @@
-# APP
+# onetwothree
 
-APP is a web app that provides information about sex education and wellness in a fun way.
+onetwothree is a web app that provides information about sex education and wellness in a fun way.
 
 ## Setup
 

@@ -1,79 +1,81 @@
-// main.js
-
-// Wait for the DOM to be ready
-document.addEventListener('DOMContentLoaded', () => {
-    // Initialize variables
+window.addEventListener("load", () => {
     let conversation = "";
-    let passcode = localStorage.getItem("passcode") || "";
+    let password = localStorage.getItem("password") || "";
 
-    // Get the form element
-    const formElement = document.getElementById('form');
+    const verifyPassword = async () => {
+        let passwordCorrect = false;
+        while (!passwordCorrect) {
+            await fetch("/process_input", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ password })
+            })
+            .then(response => response.json())
+            .then(responseJson => {
+                if (responseJson.password_correct) {
+                    passwordCorrect = true;
+                    localStorage.setItem("password", password);
+                    document.getElementById("prompt").innerHTML = "Enter a message";
+                    return;
+                }
+                document.getElementById("prompt").innerHTML = "Password incorrect";
+                password = prompt("Password incorrect.\n\nPlease enter password:");
+            })
+            .catch((err) => {
+                console.error(err);
+                document.getElementById("prompt").innerHTML = "Internal error";
+            });
+        }
+    }
 
+    verifyPassword();
+
+    const formElement = document.getElementById("form");
     const inputElement = document.getElementById("user-input");
-
     inputElement.focus();
 
-    // Create a function to return the moderation text
     const getModText = (mod) => {
-        // Get an array of categories
         let categories = [];
         for (let cat in mod.categories) {
             categories.push(cat);
         }
 
-        // Start building the moderation text string
         let modText = `<p><b>Flagged:</b> ${mod.flagged ? "TRUE" : "false"}</p><hr>`;
 
-        // Loop through the categories and add them to the moderation text string
         for (let cat of categories) {
             modText += `<p><b>${cat}:</b> ${mod.categories[cat] ? "TRUE" : "false"} (${(mod.category_scores[cat].toFixed(2))})</p>`;
         }
         return modText;
     }
     
-    // Create a function to submit the user input
     const submitUserInput = (event) => {
-        // Prevent the default form submission
         event.preventDefault();
-
-        // If the passcode is not set, prompt the user for it
-        if (passcode === "") {
-            passcode = prompt("Passcode:");
-        }
         
-        // Get the user input
-        // const inputElement = document.getElementById("user-input");
         const userInput = inputElement.value;
         inputElement.value = "";
 
-        // Update the prompt to show that the input is being processed
         const promptElement = document.getElementById("prompt");
         promptElement.innerHTML = "Loading..."
         
-        // Send the user input to the backend for processing
-        fetch('/process_input', {
-            method: 'POST',
+        fetch("/process_input", {
+            method: "POST",
             headers: {
-                'Content-Type': 'application/json'
+                "Content-Type": "application/json"
             },
-            body: JSON.stringify({ passcode, conversation, user_input: userInput })
+            body: JSON.stringify({ password, conversation, user_input: userInput })
         })
         .then(response => response.json())
         .then(responseJson => {
-            // If the passcode is incorrect, show an alert and reset the passcode variable
-            if (!responseJson.passcode_correct) {
-                alert("Passcode incorrect.");
-                document.getElementById("prompt").innerHTML = "Passcode incorrect.";
-                passcode = "";
-                localStorage.setItem("passcode", null);
+            if (!responseJson.password_correct) {
+                verifyPassword();
                 return;
             }
-            localStorage.setItem("passcode", passcode);
 
             const convoElement = document.getElementById("conversation");
             convoElement.innerHTML = "";
 
-            // Update the conversation and moderation text
             conversation = responseJson.conversation;
 
             let tempConvo = conversation;
@@ -101,36 +103,34 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
-            // Update the text field with the API's response
-            document.getElementById("prompt").innerHTML = "";
             document.getElementById("moderation").innerHTML = getModText(responseJson.moderation);
+            document.getElementById("prompt").innerHTML = "";
+        })
+        .catch((err) => {
+            console.error(err);
+            document.getElementById("prompt").innerHTML = "Internal error";
         });
     }
     
-    // Add a submit event listener to the form
-    formElement.addEventListener('submit', (event) => {
+    formElement.addEventListener("submit", (event) => {
         submitUserInput(event);
-    }); 
+    });
 
-    // Add an event listener to the form to detect when the user presses a key
-    formElement.addEventListener('keydown', (event) => {
-        // If the user presses the enter key without holding shift, and if the ctrl or meta key is
-        // also pressed, submit the form
+    formElement.addEventListener("keydown", (event) => {
         if (event.key === "Enter" && !event.shiftKey) {
             submitUserInput(event);
         }
-    }); 
+    });
     
-    inputElement.addEventListener('input', () => {
-        inputElement.style.height = 'auto';
-        inputElement.style.height = Math.min(inputElement.scrollHeight, 200) + 'px';
+    inputElement.addEventListener("input", () => {
+        inputElement.style.height = "auto";
+        inputElement.style.height = Math.min(inputElement.scrollHeight, 200) + "px";
     });
 
     let modHidden = true;
     const modToggleElement = document.getElementById("moderation-toggle");
     const modElement = document.getElementById("moderation");
     modToggleElement.addEventListener("click", (event) => {
-        console.log("FIRE");
         if (modHidden) {
             modToggleElement.innerHTML = "Hide moderation";
         } else {
@@ -138,5 +138,5 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         modElement.hidden = !modHidden;
         modHidden = !modHidden;
-    }); 
+    });
 });

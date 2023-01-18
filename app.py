@@ -2,81 +2,77 @@ from flask import Flask, request, render_template, jsonify
 import os
 import openai
 
-# Load environment variables from .env file
 from dotenv import load_dotenv
 load_dotenv()
 
-# Set the OpenAI API key
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
-# Create a Flask app
 app = Flask(__name__)
 
-@app.route('/')
+@app.route("/")
 def index():
     """Render the index.html template"""
-    return render_template('index.html')
+    return render_template("index.html")
 
-@app.route('/process_input', methods=['POST'])
+@app.route("/process_input", methods=["POST"])
 def process_input():
     """Process user input and return API response"""
-    # Get the user input from the form
-    request_data = request.get_json()
-
-    # Get the passcode from the request data
-    passcode = request_data["passcode"]
-
-    # If the passcode is incorrect, return a JSON object with passcode_correct set to False
-    if passcode != os.getenv("PASSCODE"):
-        return jsonify({
-            "passcode_correct": False,
-        })
-
-    # Get the conversation and user input from the request data
-    conversation = request_data["conversation"]
-    user_input = request_data['user_input'].strip()
-
-    # Moderate the user input
-    mod = openai.Moderation.create(
-        input=user_input
-    )
-
-    user_ws = "\n" if "\n" in user_input else " " 
     
-    # If the conversation is empty, start a new conversation with the user input
-    if conversation == "":
-        conversation = f"User:{user_ws}{user_input}\n\nAI:"
-    else:
-        # If the conversation is not empty, add the user input to the conversation
-        conversation = conversation + "\n\nUser: " + user_input + "\n\nAI:"
+    try:
+        request_data = request.get_json()
 
-    # Make a request to the OpenAI API for text-davinci-003 (DAVINCI3) model
-    response = openai.Completion.create(
-        model="text-davinci-003",
-        prompt=conversation,
-        temperature=0.7,
-        max_tokens=2048,
-        top_p=1,
-        frequency_penalty=0,
-        presence_penalty=0,
-        stop=["User:"],
-    )
+        password = request_data["password"]
 
-    # Get the API's response
-    response_text = response["choices"][0]["text"].strip()
+        if password != os.getenv("PASSWORD"):
+            return jsonify({
+                "password_correct": False,
+            })
 
-    response_ws = "\n" if "\n" in response_text else " " 
+        if "conversation" not in request_data:
+            return jsonify({
+                "password_correct": True,
+            })
 
+        conversation = request_data["conversation"]
 
-    # Add the API's response to the conversation
-    conversation = f"{conversation}{response_ws}{response_text}"
- 
-    # Return the API's response to the frontend
-    return jsonify({
-        "passcode_correct": True,
-        "conversation": conversation,
-        "moderation": mod["results"][0],
-    })
+        user_input = request_data["user_input"].strip()
 
-if __name__ == '__main__':
+        mod = openai.Moderation.create(
+            input=user_input
+        )
+
+        user_ws = "\n" if "\n" in user_input else " " 
+        
+        if conversation == "":
+            conversation = f"User:{user_ws}{user_input}\n\nAI:"
+        else:
+            conversation = conversation + "\n\nUser: " + user_input + "\n\nAI:"
+            
+        response = openai.Completion.create(
+            model="text-davinci-003",
+            prompt=conversation,
+            temperature=0.7,
+            max_tokens=2048,
+            top_p=1,
+            frequency_penalty=0,
+            presence_penalty=0,
+            stop=["User:"],
+        )
+
+        response_text = response["choices"][0]["text"].strip()
+
+        response_ws = "\n" if "\n" in response_text else " " 
+
+        conversation = f"{conversation}{response_ws}{response_text}"
+    
+        return jsonify({
+            "password_correct": True,
+            "conversation": conversation,
+            "moderation": mod["results"][0],
+        })  
+    except Exception as err:
+        print(err)
+        return "", 500
+
+if __name__ == "__main__":
     app.run()
