@@ -103,7 +103,8 @@ window.addEventListener("load", () => {
                 }
             }
 
-            document.getElementById("moderation").innerHTML = getModText(responseJson.moderation);
+            // document.getElementById("moderation").innerHTML = getModText(responseJson.moderation);
+            console.log("moderation", responseJson.moderation)
             document.getElementById("prompt").innerHTML = "";
         })
         .catch((err) => {
@@ -127,16 +128,16 @@ window.addEventListener("load", () => {
         inputElement.style.height = Math.min(inputElement.scrollHeight, 200) + "px";
     });
 
-    let modHidden = true;
-    const modToggleElement = document.getElementById("moderation-toggle");
-    const modElement = document.getElementById("moderation");
-    modToggleElement.addEventListener("click", (event) => {
-        if (modHidden) {
-            modToggleElement.innerHTML = "Hide moderation";
-        } else {
-            modToggleElement.innerHTML = "Show moderation";
-        }
-        modElement.hidden = !modHidden;
-        modHidden = !modHidden;
-    });
+    // let modHidden = true;
+    // const modToggleElement = document.getElementById("moderation-toggle");
+    // const modElement = document.getElementById("moderation");
+    // modToggleElement.addEventListener("click", (event) => {
+    //     if (modHidden) {
+    //         modToggleElement.innerHTML = "Hide moderation";
+    //     } else {
+    //         modToggleElement.innerHTML = "Show moderation";
+    //     }
+    //     modElement.hidden = !modHidden;
+    //     modHidden = !modHidden;
+    // });
 });
