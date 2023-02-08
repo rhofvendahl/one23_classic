@@ -1,7 +1,5 @@
 # onetwothree
 
-onetwothree is a web app that provides information about sex education and wellness in a fun way.
-
 ## Setup
 
 1. Create a virtual environment:

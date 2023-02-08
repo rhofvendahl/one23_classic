@@ -26,6 +26,7 @@ window.addEventListener("load", () => {
             .catch((err) => {
                 console.error(err);
                 document.getElementById("prompt").innerHTML = "Internal error";
+                alert("There was an internal error, please reload and try again.");
             });
         }
     }
