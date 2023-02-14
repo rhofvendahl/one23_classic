@@ -37,9 +37,9 @@ def process_input():
 
         user_input = request_data["user_input"].strip()
 
-        mod = openai.Moderation.create(
-            input=user_input
-        )
+        # mod = openai.Moderation.create(
+        #     input=user_input
+        # )
 
         user_ws = "\n" if "\n" in user_input else " " 
         
@@ -68,7 +68,7 @@ def process_input():
         return jsonify({
             "password_correct": True,
             "conversation": conversation,
-            "moderation": mod["results"][0],
+            # "moderation": mod["results"][0],
         })  
     except Exception as err:
         print(err)

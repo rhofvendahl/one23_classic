@@ -37,19 +37,19 @@ window.addEventListener("load", () => {
     const inputElement = document.getElementById("user-input");
     inputElement.focus();
 
-    const getModText = (mod) => {
-        let categories = [];
-        for (let cat in mod.categories) {
-            categories.push(cat);
-        }
+    // const getModText = (mod) => {
+    //     let categories = [];
+    //     for (let cat in mod.categories) {
+    //         categories.push(cat);
+    //     }
 
-        let modText = `<p><b>Flagged:</b> ${mod.flagged ? "TRUE" : "false"}</p><hr>`;
+    //     let modText = `<p><b>Flagged:</b> ${mod.flagged ? "TRUE" : "false"}</p><hr>`;
 
-        for (let cat of categories) {
-            modText += `<p><b>${cat}:</b> ${mod.categories[cat] ? "TRUE" : "false"} (${(mod.category_scores[cat].toFixed(2))})</p>`;
-        }
-        return modText;
-    }
+    //     for (let cat of categories) {
+    //         modText += `<p><b>${cat}:</b> ${mod.categories[cat] ? "TRUE" : "false"} (${(mod.category_scores[cat].toFixed(2))})</p>`;
+    //     }
+    //     return modText;
+    // }
     
     const submitUserInput = (event) => {
         event.preventDefault();
@@ -105,7 +105,7 @@ window.addEventListener("load", () => {
             }
 
             // document.getElementById("moderation").innerHTML = getModText(responseJson.moderation);
-            console.log("moderation", responseJson.moderation)
+            // console.log("moderation", responseJson.moderation)
             document.getElementById("prompt").innerHTML = "";
         })
         .catch((err) => {
