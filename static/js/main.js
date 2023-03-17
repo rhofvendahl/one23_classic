@@ -1,27 +1,41 @@
 window.addEventListener("load", () => {
-    let conversation = "";
+    let messages = [
+        {
+            role: "system",
+            content: "You are a helpful assistant."
+        }
+    ];
     let password = localStorage.getItem("password") || "";
+    let authLevel;
 
     const verifyPassword = async () => {
         let passwordCorrect = false;
         while (!passwordCorrect) {
-            await fetch("/process_input", {
+            await fetch("/check-password", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({ password })
+                body: JSON.stringify({
+                    password,
+                })
             })
             .then(response => response.json())
             .then(responseJson => {
-                if (responseJson.password_correct) {
+                authLevel = responseJson.authLevel;
+                if (["general", "vip"].includes(authLevel)) {
                     passwordCorrect = true;
                     localStorage.setItem("password", password);
                     document.getElementById("prompt").innerHTML = "Enter a message";
+                    authLevel = responseJson.authLevel;
                     return;
                 }
+                promptMessage = "Please enter password:"
+                if (password !== "") {
+                    promptMessage = "Password incorrect.\n\n" + promptMessage;
+                }
                 document.getElementById("prompt").innerHTML = "Password incorrect";
-                password = prompt("Password incorrect.\n\nPlease enter password:");
+                password = prompt(promptMessage);
             })
             .catch((err) => {
                 console.error(err);
@@ -33,94 +47,82 @@ window.addEventListener("load", () => {
 
     verifyPassword();
 
-    const formElement = document.getElementById("form");
-    const inputElement = document.getElementById("user-input");
+    const submitElement = document.getElementById("message-submit");
+    const inputElement = document.getElementById("message-input");
     inputElement.focus();
-
-    // const getModText = (mod) => {
-    //     let categories = [];
-    //     for (let cat in mod.categories) {
-    //         categories.push(cat);
-    //     }
-
-    //     let modText = `<p><b>Flagged:</b> ${mod.flagged ? "TRUE" : "false"}</p><hr>`;
-
-    //     for (let cat of categories) {
-    //         modText += `<p><b>${cat}:</b> ${mod.categories[cat] ? "TRUE" : "false"} (${(mod.category_scores[cat].toFixed(2))})</p>`;
-    //     }
-    //     return modText;
-    // }
     
-    const submitUserInput = (event) => {
-        event.preventDefault();
-        
+    const submitUserInput = () => {
         const userInput = inputElement.value;
         inputElement.value = "";
 
         const promptElement = document.getElementById("prompt");
         promptElement.innerHTML = "Loading..."
+
+        messages.push({
+            role: "user",
+            content: userInput.trim(),
+        })
+        console.log("MESSAGES", messages);
         
-        fetch("/process_input", {
+        fetch("/get-completion", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ password, conversation, user_input: userInput })
+            body: JSON.stringify({
+                password,
+                model: "gpt-3.5-turbo",
+                messages,
+            })
         })
         .then(response => response.json())
         .then(responseJson => {
-            if (!responseJson.password_correct) {
-                verifyPassword();
-                return;
+            messages.push(responseJson.message);
+            
+            
+            const roleMap = {
+                user: "User",
+                assistant: "Model"
             }
-
-            const convoElement = document.getElementById("conversation");
-            convoElement.innerHTML = "";
-
-            conversation = responseJson.conversation;
-
-            let tempConvo = conversation;
-            while (tempConvo.length > 0) {
-                const speakerIndex = tempConvo.search(/User:|AI:/);
-
-                let preSpeaker;
-                let speaker;
-                if (speakerIndex < 0) {
-                    preSpeaker = tempConvo;
-                    tempConvo = "";
+            let conversation = ""
+            for (message of messages) {
+                if (message.role === "system") {
+                    const command = `<p class="message-system">command: "${message.content}"</p>`;
+                    const commandElement = document.getElementById("command");
+                    commandElement.innerHTML = command;
+                    continue;
+                } else if (message.role === "user") {
+                    conversation += `<p class="message-user"><span class="role-user">User:</span>`;
                 } else {
-                    preSpeaker = tempConvo.substring(0, speakerIndex);
-                    speaker = tempConvo[speakerIndex] === "U" ? "User:" : "AI:";
-                    tempConvo = tempConvo.substring(speakerIndex + speaker.length);
+                    conversation += `<p class="message-model"><span class="role-model">Model:</span>`;
                 }
-                if (preSpeaker) {
-                    let preSpeakerELement = document.createTextNode(preSpeaker);
-                    convoElement.appendChild(preSpeakerELement);
+                if (message.content.includes("\n")) {
+                    conversation += "\n";
+                } else {
+                    conversation += " ";
                 }
-                if (speaker) {
-                    let speakerElement = document.createElement("span");
-                    speakerElement.innerHTML = `<b>${speaker}</b>`;
-                    convoElement.appendChild(speakerElement);
-                }
+                conversation += `${message.content}</p>`
             }
+            
+            const conversationElement = document.getElementById("conversation");
+            conversationElement.innerHTML = conversation;
 
-            // document.getElementById("moderation").innerHTML = getModText(responseJson.moderation);
-            // console.log("moderation", responseJson.moderation)
             document.getElementById("prompt").innerHTML = "";
         })
         .catch((err) => {
             console.error(err);
             document.getElementById("prompt").innerHTML = "Internal error";
+            alert("There was an internal error, please reload and try again.");
         });
     }
     
-    formElement.addEventListener("submit", (event) => {
-        submitUserInput(event);
+    submitElement.addEventListener("click", () => {
+        submitUserInput();
     });
 
-    formElement.addEventListener("keydown", (event) => {
+    inputElement.addEventListener("keydown", (event) => {
         if (event.key === "Enter" && !event.shiftKey) {
-            submitUserInput(event);
+            submitUserInput();
         }
     });
     
@@ -129,16 +131,23 @@ window.addEventListener("load", () => {
         inputElement.style.height = Math.min(inputElement.scrollHeight, 200) + "px";
     });
 
-    // let modHidden = true;
-    // const modToggleElement = document.getElementById("moderation-toggle");
-    // const modElement = document.getElementById("moderation");
-    // modToggleElement.addEventListener("click", (event) => {
-    //     if (modHidden) {
-    //         modToggleElement.innerHTML = "Hide moderation";
-    //     } else {
-    //         modToggleElement.innerHTML = "Show moderation";
-    //     }
-    //     modElement.hidden = !modHidden;
-    //     modHidden = !modHidden;
-    // });
+    const toggleModelDetail = document.getElementById("toggle-model-detail");
+    const modelBasic = document.getElementById("model-basic");
+    const modelBasicVip = document.getElementById("model-basic-vip");
+    const modelBasicVipUnauthorized = document.getElementById("model-basic-vip-unauthorized");
+    const modelDetail = document.getElementById("model-detail");
+    const modelDetailVip = document.getElementById("model-detail-vip");
+    const modelDetailVipUnauthorized = document.getElementById("mmodel-detail-vip-unauthorized");
+
+    toggleModelDetail.addEventListener("click", () => {
+        if (modelBasic.style.display === "none") {
+            modelBasic.style.display = "block";
+            modelDetail.style.display = "none";
+            toggleModelDetail.innerHTML = "Show more";
+        } else {
+            modelBasic.style.display = "none";
+            modelDetail.style.display = "block";
+            toggleModelDetail.innerHTML = "Show less";
+        }
+    });
 });

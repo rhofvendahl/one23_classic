@@ -10,16 +10,107 @@
     <div id="content-wrapper">
       <div id="content">
         <h1 id="welcome">Welcome to this app!</h1>
+        <div id="command"></div>
         <div id="conversation"></div>
     
         <p id="prompt">Enter a message</p>
-        <form id="form">
-          <textarea id="user-input" type="text" id="user-input" name="user-input"></textarea><br>
-          <input id="submit" type="submit" value="Submit">
+        <form id="message-form">
+          <textarea id="message-input" type="text" name="message-input"></textarea><br>
+          <button id="message-submit" type="button">Submit</button>
         </form> 
         <br>
- <!--       <button id="moderation-toggle">Show moderation</button>
-        <div id="moderation" hidden="true">Moderation N/A</div>-->
+        <form id="model-form">
+          <div id="model-basic">
+            <div id="model-basic-vip" hidden>
+              <input type="radio" id="gpt-4" name="model" value="gpt-4">
+              <label for="gpt-4">GPT-4</label><br>
+            </div>
+            <div id="model-basic-vip-unauthorized">
+              <input type="radio" id="gpt-4" name="model" value="gpt-4" disabled>
+              <label for="gpt-4">GPT-4 (Unauthorized)</label><br>
+            </div>
+            <div id="model-basic-general">
+              <input type="radio" id="gpt-3.5-turbo" name="model" value="gpt-3.5-turbo">
+              <label for="gpt-3.5-turbo">GPT-3.5</label><br>
+
+              <input type="radio" id="davinci" name="model" value="davinci">
+              <label for="davinci">GPT-3</label><br>
+            </div>
+          </div>
+          
+          <div id="model-detail" hidden>
+            <div id="model-detail-vip" hidden>
+              <br>
+              <div>GPT-4</div>
+              
+              <input type="radio" id="gpt-4" name="model" value="gpt-4">
+              <label for="gpt-4">gpt-4</label><br>
+
+              <input type="radio" id="gpt-4-32k" name="model" value="gpt-4-32k">
+              <label for="gpt-4-32k">gpt-4-32k (large inputs)</label><br>
+            </div>
+            <div id="model-detail-vip-unauthorized">
+              <br>
+              <div>GPT-4 (Unauthorized)</div>
+              
+              <input type="radio" id="gpt-4" name="model" value="gpt-4" disabled>
+              <label for="gpt-4">gpt-4</label><br>
+
+              <input type="radio" id="gpt-4-32k" name="model" value="gpt-4-32k" disabled>
+              <label for="gpt-4-32k">gpt-4-32k (large inputs)</label><br>
+            </div>
+            <div id="model-detail-general">
+              <br>
+              <div>GPT-3.5</div>
+
+              <input type="radio" id="gpt-3.5-turbo" name="model" value="gpt-3.5-turbo">
+              <label for="gpt-3.5-turbo">gpt-3.5-turbo (best 3.5, powers ChatGPT)</label><br>
+
+              <input type="radio" id="text-davinci-003" name="model" value="text-davinci-003">
+              <label for="text-davinci-003">text-davinci-003 (second best 3.5)</label><br>
+
+              <input type="radio" id="text-davinci-002" name="model" value="text-davinci-002">
+              <label for="text-davinci-002">text-davinci-002 (supervised learning)</label><br>
+
+              <br>
+              <div>Codex</div>
+
+              <input type="radio" id="code-davinci-002" name="model" value="code-davinci-002">
+              <label for="code-davinci-002">code-davinci-002 (also 3.5, accepts large inputs)</label><br>
+
+
+              <input type="radio" id="code-cushman-001" name="model" value="code-cushman-001">
+              <label for="code-cushman-001">code-cushman-001 (little worse, little faster)</label><br>
+
+              <br>
+              <div>GPT-3</div>
+
+              <input type="radio" id="text-curie-001" name="model" value="text-curie-001">
+              <label for="aaaa">text-curie-001 (good, fast)</label><br>
+
+              <input type="radio" id="text-babbage-001" name="model" value="text-babbage-001">
+              <label for="text-babbage-001">text-babbage-001 (ok, very fast)</label><br>
+
+              <input type="radio" id="text-ada-001" name="model" value="text-ada-001">
+              <label for="text-ada-001">text-ada-001 (eh, fastest)</label><br>
+
+              <input type="radio" id="davinci" name="model" value="davinci">
+              <label for="davinci">davinci (best 3)</label><br>
+
+              <input type="radio" id="curie" name="model" value="curie">
+              <label for="curie">curie (?)</label><br>
+
+              <input type="radio" id="babbage" name="model" value="babbage">
+              <label for="babbage">babbage (?)</label><br>
+
+              <input type="radio" id="ada" name="model" value="ada">
+              <label for="ada">ada (?)</label><br>
+            </div>
+          </div>
+
+          <br>
+          <button id="toggle-model-detail" type="button">Show more</button>
+        </form>
       </div>
     </div>
   </body>

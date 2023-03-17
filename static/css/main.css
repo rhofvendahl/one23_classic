@@ -8,6 +8,7 @@ Palette
 777A7D (Sonic Silver)
 818587 (Gray Web)
 D9DBDB (Gainsboro)
+000000 (White
 */
 
 body {
@@ -37,7 +38,6 @@ body {
 
 #conversation {
   white-space: pre-wrap;
-  color: white;
 }
 
 #prompt {
@@ -45,12 +45,29 @@ body {
   color: #D9DBDB;
 }
 
-form {
+#message-form {
   display: flex;
   flex-direction: column;
 }
 
-#user-input {
+.message-system {
+  color: #818587;
+  font-style: italic;
+}
+
+.message-user {
+  color: #D9DBDB;
+}
+
+.message-model {
+  color: white;
+}
+
+.role-user, .role-model {
+  font-weight: bold;
+}
+
+#message-input {
   padding: 0.5em;
   font-size: 1em;
   background-color: #42484B;
@@ -60,11 +77,11 @@ form {
   color: white;
 }
 
-#user-input:focus {
+#message-input:focus {
   outline: none;
 }
 
-#submit {
+#message-submit {
   margin-top: 0.5em;
   padding: 0.5em;
   font-size: 1em;
@@ -75,22 +92,21 @@ form {
   color: #D9DBDB;
 }
 
-#submit:hover {
+#message-submit:hover {
   background: #42484B
 }
 
-#submit:active {
+#message-submit:active {
   color: white;
 }
 
-#moderation-toggle {
-  background-color: transparent;
-  color: #D9DBDB;
-  border: none;
-  padding: 0;
-  margin-bottom: 1rem;
+#model-form {
+  accent-color: #131515;
 }
 
-#moderation {
-  white-space: pre-wrap;
+#toggle-model-detail {
+  background: transparent;
+  border-radius: 2px;
+  border: none;
+  color: #D9DBDB;
 }
