@@ -2,48 +2,50 @@ window.addEventListener("load", () => {
     let messages = [];
     let password = localStorage.getItem("password") || "";
 
-    const promptElement = document.getElementById("message-prompt")
+    const promptElement = document.getElementById("message-prompt");
 
-    const verifyPassword = async () => {
-        let passwordCorrect = false;
-        while (!passwordCorrect) {
-            await fetch("/check-password", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    password,
-                })
+    const getAuthLevel = async (passwordAttempt) => {
+        return await fetch("/check-password", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                password: passwordAttempt,
             })
-            .then(response => response.json())
-            .then(responseJson => {
-                authLevel = responseJson.authLevel;
+        })
+        .then(response => response.json())
+        .then(responseJson => {
+            return responseJson.authLevel;
+        });
+    }
+
+    const gatekeep = async () => {
+        try {
+            while (true) {
+                authLevel = await getAuthLevel(password);
                 if (["general", "vip"].includes(authLevel)) {
-                    passwordCorrect = true;
                     localStorage.setItem("password", password);
-                    promptElement.innerHTML = "Enter a message";
                     if (authLevel === "vip") {
-                        unlockModel();
+                        unlockVip();
                     }
-                    return;
+                    break;
                 }
                 promptMessage = "Please enter password:"
                 if (password !== "") {
                     promptMessage = "Password incorrect.\n\n" + promptMessage;
                 }
-                promptElement.innerHTML = "Password incorrect";
                 password = prompt(promptMessage);
-            })
-            .catch((err) => {
-                console.error(err);
-                document.getElementById("messagePrompt").innerHTML = "Internal error";
-                alert("There was an internal error, please reload and try again.");
-            });
+            }
+        } catch (err) {
+            console.error(err);
+            document.getElementById("messagePrompt").innerHTML = "Internal error";
+            alert("There was an internal error, please reload and try again.");
+
         }
     }
 
-    verifyPassword();
+    gatekeep();
 
     const submitElement = document.getElementById("message-submit");
     const inputElement = document.getElementById("message-input");
@@ -154,7 +156,8 @@ window.addEventListener("load", () => {
     const modelDetailVipLocked= document.getElementById("detail-model-vip-locked");
 
     const statusElement = document.getElementById("password-status");
-    const unlockModel = () => {
+    const unlockVip = () => {
+        console.log("UNLOCKING VIP");
         statusElement.innerHTML = "unlocked";
 
         modelBasicVip.style.display = "block";
@@ -162,9 +165,15 @@ window.addEventListener("load", () => {
         modelDetailVip.style.display = "block";
         modelDetailVipLocked.style.display = "none";
     };
-    statusElement.addEventListener("click", () => {
-        password = "";
-        verifyPassword();
+    statusElement.addEventListener("click", async () => {
+        const passwordAttempt = prompt("Enter password to unlock:");
+        const authLevel = await getAuthLevel(passwordAttempt);
+        if (authLevel === "vip") {
+            unlockVip();
+            alert("Unlocked.");
+        } else {
+            alert("Password incorrect.")
+        }
     });
 
     toggleSettings.addEventListener("click", () => {
