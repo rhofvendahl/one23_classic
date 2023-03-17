@@ -117,7 +117,13 @@ def get_completion():
         for message in messages:
             if message["role"] == "system":
                 continue
-            prompt += message["role"] + ": " + message["content"] + "\n\n"
+            
+            roleMap = {
+                "user": "User",
+                "assistant": "AI",
+            }
+            prompt += roleMap[message["role"]] + ": " + message["content"] + "\n\n"
+        prompt += "AI: "
         response = openai.Completion.create(
             model = model,
             prompt = prompt,
@@ -127,8 +133,8 @@ def get_completion():
         # Generally the model will stick to the prompt format, prepending "assistant: " to the response text
         content = response["choices"][0]["text"]
         content = content.strip()
-        if content.startswith("assistant:"):
-            content = content[len("assistant:"):]
+        if content.startswith("AI:"):
+            content = content[len("AI:"):]
             content = content.strip()
         response_message = { "role": "assistant", "content": content }
         return jsonify({

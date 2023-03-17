@@ -190,6 +190,7 @@ window.addEventListener("load", () => {
         "gpt-3.5-turbo",    
     ];
 
+    const command = document.getElementById("command");
     const commandInputWrapper = document.getElementById("command-input-wrapper");
     
     const setModel = (newModel) => {
@@ -204,9 +205,11 @@ window.addEventListener("load", () => {
             radio.checked = true;
         }
         if (chatModels.includes(newModel)) {
-            // TODO: Resolve this css quirk
+            command.style.display = "block"
+            // TODO: Resolve this css quirk 
             commandInputWrapper.style.display = "flex";
         } else {
+            command.style.display = "none";
             commandInputWrapper.style.display = "none";
         }
     };
