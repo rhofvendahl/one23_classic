@@ -162,6 +162,10 @@ window.addEventListener("load", () => {
         modelDetailVip.style.display = "block";
         modelDetailVipLocked.style.display = "none";
     };
+    statusElement.addEventListener("click", () => {
+        password = "";
+        verifyPassword();
+    });
 
     toggleSettings.addEventListener("click", () => {
         // If only basic settings are shown, show detail

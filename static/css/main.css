@@ -19,9 +19,13 @@ body {
 
 #password-status {
   position: absolute;
-  top: .4em;
-  right: .4em;
+  top: .2em;
+  right: 0;
   text-align: right;
+  background-color: transparent;
+  border: none;
+  color: #D9DBDB;
+  font-size: 1em;
 }
 
 #content-wrapper {
