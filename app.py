@@ -115,6 +115,8 @@ def get_completion():
 
         prompt = ""
         for message in messages:
+            if message["role"] == "system":
+                continue
             prompt += message["role"] + ": " + message["content"] + "\n\n"
         response = openai.Completion.create(
             model = model,
@@ -122,7 +124,7 @@ def get_completion():
             max_tokens = 256,
         )
         total_tokens = response["usage"]["total_tokens"]
-        # Generally the model will stick to the prompt format, prepending "Assistant: " to the response text
+        # Generally the model will stick to the prompt format, prepending "assistant: " to the response text
         content = response["choices"][0]["text"]
         content = content.strip()
         if content.startswith("assistant:"):
@@ -140,4 +142,4 @@ def get_completion():
         return "", 500
 
 if __name__ == "__main__":
-    app.run()
+    app.run(port=1234)

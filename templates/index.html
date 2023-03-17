@@ -7,110 +7,117 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
   </head>
   <body>
+    <div id="password-status">locked</div>
     <div id="content-wrapper">
       <div id="content">
         <h1 id="welcome">Welcome to this app!</h1>
         <div id="command"></div>
         <div id="conversation"></div>
-    
-        <p id="prompt">Enter a message</p>
-        <form id="message-form">
+        
+        <div id="command-input-wrapper">
+          <p id="command-prompt">Initial command</p>
+          <input id="command-input" type="text" name="command-input" value="You are a helpful assistant.">
+        </div>
+        <div id="message-wrapper">
+          <p id="message-prompt">Enter a message</p>
           <textarea id="message-input" type="text" name="message-input"></textarea><br>
           <button id="message-submit" type="button">Submit</button>
-        </form> 
+        </div> 
         <br>
-        <form id="model-form">
-          <div id="model-basic">
-            <div id="model-basic-vip" hidden>
-              <input type="radio" id="gpt-4" name="model" value="gpt-4">
-              <label for="gpt-4">GPT-4</label><br>
+        <div id="settings-wrapper">
+          <form id="settings-basic">
+            <div id="settings-title">Settings</div>
+            <div id="basic-model" class="model">
+              <div id="basic-model-vip" hidden>
+                <input type="radio" id="gpt-4" name="model" value="gpt-4">
+                <label for="gpt-4">Very good at chat</label><br>
+              </div>
+              <div id="basic-model-vip-locked">
+                <input type="radio" id="gpt-4-locked" name="model" value="gpt-4" disabled>
+                <label for="gpt-4-locked">Very good at chat (locked)</label><br>
+              </div>
+              <div id="model-basic-general">
+                <input type="radio" id="gpt-3_5-turbo" name="model" value="gpt-3_5-turbo">
+                <label for="gpt-3_5-turbo">Good at chat</label><br>
+                <input type="radio" id="text-davinci-003" name="model" value="text-davinci-003">
+                <label for="text-davinci-003">Unmoderated</label><br>
+              </div>
             </div>
-            <div id="model-basic-vip-unauthorized">
-              <input type="radio" id="gpt-4" name="model" value="gpt-4" disabled>
-              <label for="gpt-4">GPT-4 (Unauthorized)</label><br>
+          </form>
+
+          <form id="settings-detail" hidden>
+            <div id="settings-title">Settings</div>
+            <p class="settings-section-title">Model</p>
+            <div id="detail-model" class="model">
+              <div id="detail-model-vip" hidden>
+                <div>GPT-4</div>
+                
+                <input type="radio" id="gpt-4" name="model" value="gpt-4">
+                <label for="gpt-4">gpt-4 (most competent)</label><br>
+
+                <input type="radio" id="gpt-4-32k" name="model" value="gpt-4-32k">
+                <label for="gpt-4-32k">gpt-4-32k (most competent, huge input)</label><br>
+              </div>
+              <div id="detail-model-vip-locked">
+                <div>GPT-4</div>
+                
+                <input type="radio" id="gpt-4-locked" name="model" value="gpt-4" disabled>
+                <label for="gpt-4-locked">gpt-4 (most competent; locked)</label><br>
+
+                <input type="radio" id="gpt-4-32k-locked" name="model" value="gpt-4-32k" disabled>
+                <label for="gpt-4-32k-locked">gpt-4-32k (most competent, huge input; locked)</label><br>
+              </div>
+              <div id="detail-model-general">
+                <br>
+                <div>GPT-3.5</div>
+
+                <input type="radio" id="gpt-3_5-turbo" name="model" value="gpt-3_5-turbo">
+                <label for="gpt-3_5-turbo">gpt-3.5-turbo (more competent, powers ChatGPT)</label><br>
+
+                <input type="radio" id="text-davinci-003" name="model" value="text-davinci-003">
+                <label for="text-davinci-003">text-davinci-003 (competent, unmoderated)</label><br>
+
+                <input type="radio" id="text-davinci-002" name="model" value="text-davinci-002">
+                <label for="text-davinci-002">text-davinci-002 (supervised learning)</label><br>
+
+                <br>
+                <div>Codex</div>
+
+                <input type="radio" id="code-davinci-002" name="model" value="code-davinci-002">
+                <label for="code-davinci-002">code-davinci-002 (also gpt-3.5, large input)</label><br>
+
+
+                <input type="radio" id="code-cushman-001" name="model" value="code-cushman-001">
+                <label for="code-cushman-001">code-cushman-001 (little worse, little faster)</label><br>
+
+                <br>
+                <div>GPT-3</div>
+
+                <!-- <input type="radio" id="text-curie-001" name="model" value="text-curie-001">
+                <label for="aaaa">text-curie-001 (good, fast)</label><br>
+
+                <input type="radio" id="text-babbage-001" name="model" value="text-babbage-001">
+                <label for="text-babbage-001">text-babbage-001 (ok, very fast)</label><br>
+
+                <input type="radio" id="text-ada-001" name="model" value="text-ada-001">
+                <label for="text-ada-001">text-ada-001 (eh, fastest)</label><br> -->
+
+                <input type="radio" id="davinci" name="model" value="davinci">
+                <label for="davinci">davinci (best gpt-3)</label><br>
+
+                <input type="radio" id="curie" name="model" value="curie">
+                <label for="curie">curie (good, fast)</label><br>
+
+                <input type="radio" id="babbage" name="model" value="babbage">
+                <label for="babbage">babbage (ok, very fast)</label><br>
+
+                <input type="radio" id="ada" name="model" value="ada">
+                <label for="ada">ada (eh, fastest)</label><br>
+              </div>
             </div>
-            <div id="model-basic-general">
-              <input type="radio" id="gpt-3.5-turbo" name="model" value="gpt-3.5-turbo">
-              <label for="gpt-3.5-turbo">GPT-3.5</label><br>
-
-              <input type="radio" id="davinci" name="model" value="davinci">
-              <label for="davinci">GPT-3</label><br>
-            </div>
-          </div>
-          
-          <div id="model-detail" hidden>
-            <div id="model-detail-vip" hidden>
-              <br>
-              <div>GPT-4</div>
-              
-              <input type="radio" id="gpt-4" name="model" value="gpt-4">
-              <label for="gpt-4">gpt-4</label><br>
-
-              <input type="radio" id="gpt-4-32k" name="model" value="gpt-4-32k">
-              <label for="gpt-4-32k">gpt-4-32k (large inputs)</label><br>
-            </div>
-            <div id="model-detail-vip-unauthorized">
-              <br>
-              <div>GPT-4 (Unauthorized)</div>
-              
-              <input type="radio" id="gpt-4" name="model" value="gpt-4" disabled>
-              <label for="gpt-4">gpt-4</label><br>
-
-              <input type="radio" id="gpt-4-32k" name="model" value="gpt-4-32k" disabled>
-              <label for="gpt-4-32k">gpt-4-32k (large inputs)</label><br>
-            </div>
-            <div id="model-detail-general">
-              <br>
-              <div>GPT-3.5</div>
-
-              <input type="radio" id="gpt-3.5-turbo" name="model" value="gpt-3.5-turbo">
-              <label for="gpt-3.5-turbo">gpt-3.5-turbo (best 3.5, powers ChatGPT)</label><br>
-
-              <input type="radio" id="text-davinci-003" name="model" value="text-davinci-003">
-              <label for="text-davinci-003">text-davinci-003 (second best 3.5)</label><br>
-
-              <input type="radio" id="text-davinci-002" name="model" value="text-davinci-002">
-              <label for="text-davinci-002">text-davinci-002 (supervised learning)</label><br>
-
-              <br>
-              <div>Codex</div>
-
-              <input type="radio" id="code-davinci-002" name="model" value="code-davinci-002">
-              <label for="code-davinci-002">code-davinci-002 (also 3.5, accepts large inputs)</label><br>
-
-
-              <input type="radio" id="code-cushman-001" name="model" value="code-cushman-001">
-              <label for="code-cushman-001">code-cushman-001 (little worse, little faster)</label><br>
-
-              <br>
-              <div>GPT-3</div>
-
-              <input type="radio" id="text-curie-001" name="model" value="text-curie-001">
-              <label for="aaaa">text-curie-001 (good, fast)</label><br>
-
-              <input type="radio" id="text-babbage-001" name="model" value="text-babbage-001">
-              <label for="text-babbage-001">text-babbage-001 (ok, very fast)</label><br>
-
-              <input type="radio" id="text-ada-001" name="model" value="text-ada-001">
-              <label for="text-ada-001">text-ada-001 (eh, fastest)</label><br>
-
-              <input type="radio" id="davinci" name="model" value="davinci">
-              <label for="davinci">davinci (best 3)</label><br>
-
-              <input type="radio" id="curie" name="model" value="curie">
-              <label for="curie">curie (?)</label><br>
-
-              <input type="radio" id="babbage" name="model" value="babbage">
-              <label for="babbage">babbage (?)</label><br>
-
-              <input type="radio" id="ada" name="model" value="ada">
-              <label for="ada">ada (?)</label><br>
-            </div>
-          </div>
-
-          <br>
-          <button id="toggle-model-detail" type="button">Show more</button>
-        </form>
+          </form>
+        </div>
+        <button id="toggle-settings" type="button">Show more</button>
       </div>
     </div>
   </body>

@@ -17,6 +17,13 @@ body {
   color: #D9DBDB;
 }
 
+#password-status {
+  position: absolute;
+  top: .4em;
+  right: .4em;
+  text-align: right;
+}
+
 #content-wrapper {
   display: flex;
   align-items: center;
@@ -40,17 +47,7 @@ body {
   white-space: pre-wrap;
 }
 
-#prompt {
-  font-style: italic;
-  color: #D9DBDB;
-}
-
-#message-form {
-  display: flex;
-  flex-direction: column;
-}
-
-.message-system {
+.message-command {
   color: #818587;
   font-style: italic;
 }
@@ -67,7 +64,17 @@ body {
   font-weight: bold;
 }
 
-#message-input {
+#message-prompt, #command-prompt {
+  font-style: italic;
+  color: #D9DBDB;
+}
+
+#message-wrapper, #command-input-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+#message-input, #command-input {
   padding: 0.5em;
   font-size: 1em;
   background-color: #42484B;
@@ -75,6 +82,7 @@ body {
   border-radius: 4px;
   resize: none;
   color: white;
+  font-family: Arial, sans-serif
 }
 
 #message-input:focus {
@@ -104,9 +112,37 @@ body {
   accent-color: #131515;
 }
 
-#toggle-model-detail {
+#settings-wrapper {
+  border: 1px solid #42484B;
+  border-radius: 8px;
+  padding: 1em;
+  margin-bottom: 1em;
+}
+
+#settings-title {
+  text-align: center;
+  margin-bottom: .5em;
+}
+
+.settings-section-title {
+  font-size: 1.2em;
+}
+
+.line {
+  border-top: 1px solid #42484B;
+  margin-top: .5em;
+  margin-bottom: .5em;
+}
+
+#toggle-settings {
   background: transparent;
   border-radius: 2px;
   border: none;
   color: #D9DBDB;
+  font-size: 1em;
+  padding: 0;
+}
+
+input[type="radio"] {
+  accent-color: #1D2020;
 }

@@ -1,12 +1,8 @@
 window.addEventListener("load", () => {
-    let messages = [
-        {
-            role: "system",
-            content: "You are a helpful assistant."
-        }
-    ];
+    let messages = [];
     let password = localStorage.getItem("password") || "";
-    let authLevel;
+
+    const promptElement = document.getElementById("message-prompt")
 
     const verifyPassword = async () => {
         let passwordCorrect = false;
@@ -26,20 +22,22 @@ window.addEventListener("load", () => {
                 if (["general", "vip"].includes(authLevel)) {
                     passwordCorrect = true;
                     localStorage.setItem("password", password);
-                    document.getElementById("prompt").innerHTML = "Enter a message";
-                    authLevel = responseJson.authLevel;
+                    promptElement.innerHTML = "Enter a message";
+                    if (authLevel === "vip") {
+                        unlockModel();
+                    }
                     return;
                 }
                 promptMessage = "Please enter password:"
                 if (password !== "") {
                     promptMessage = "Password incorrect.\n\n" + promptMessage;
                 }
-                document.getElementById("prompt").innerHTML = "Password incorrect";
+                promptElement.innerHTML = "Password incorrect";
                 password = prompt(promptMessage);
             })
             .catch((err) => {
                 console.error(err);
-                document.getElementById("prompt").innerHTML = "Internal error";
+                document.getElementById("messagePrompt").innerHTML = "Internal error";
                 alert("There was an internal error, please reload and try again.");
             });
         }
@@ -51,18 +49,35 @@ window.addEventListener("load", () => {
     const inputElement = document.getElementById("message-input");
     inputElement.focus();
     
+    const unavailable = [
+        "gpt-4",
+        "gpt-4-32k",
+    ];
+
     const submitUserInput = () => {
+        if (unavailable.includes(model)) {
+            alert(`Unfortunately, model "${model}" is not available at this time.`);
+            return;
+        }
+
+        if (messages.length === 0) {
+            const commandInput = document.getElementById("command-input").value;
+            messages.push({
+                role: "system",
+                content: commandInput,
+            })
+        }
+
         const userInput = inputElement.value;
         inputElement.value = "";
+        document.getElementById("command-input-wrapper").style.display = "none";
 
-        const promptElement = document.getElementById("prompt");
         promptElement.innerHTML = "Loading..."
 
         messages.push({
             role: "user",
             content: userInput.trim(),
         })
-        console.log("MESSAGES", messages);
         
         fetch("/get-completion", {
             method: "POST",
@@ -71,14 +86,13 @@ window.addEventListener("load", () => {
             },
             body: JSON.stringify({
                 password,
-                model: "gpt-3.5-turbo",
+                model,
                 messages,
             })
         })
         .then(response => response.json())
         .then(responseJson => {
             messages.push(responseJson.message);
-            
             
             const roleMap = {
                 user: "User",
@@ -87,31 +101,31 @@ window.addEventListener("load", () => {
             let conversation = ""
             for (message of messages) {
                 if (message.role === "system") {
-                    const command = `<p class="message-system">command: "${message.content}"</p>`;
+                    const command = `<br><div class="message-command">command: "${message.content}"</div>`;
                     const commandElement = document.getElementById("command");
                     commandElement.innerHTML = command;
                     continue;
                 } else if (message.role === "user") {
-                    conversation += `<p class="message-user"><span class="role-user">User:</span>`;
+                    conversation += `<br><div class="message-user"><span class="role-user">User:</span>`;
                 } else {
-                    conversation += `<p class="message-model"><span class="role-model">Model:</span>`;
+                    conversation += `<br><div class="message-model"><span class="role-model">Model:</span>`;
                 }
                 if (message.content.includes("\n")) {
                     conversation += "\n";
                 } else {
                     conversation += " ";
                 }
-                conversation += `${message.content}</p>`
+                conversation += `${message.content}</div>`
             }
             
             const conversationElement = document.getElementById("conversation");
             conversationElement.innerHTML = conversation;
 
-            document.getElementById("prompt").innerHTML = "";
+            promptElement.innerHTML = "";
         })
         .catch((err) => {
             console.error(err);
-            document.getElementById("prompt").innerHTML = "Internal error";
+            promptElement.innerHTML = "Internal error";
             alert("There was an internal error, please reload and try again.");
         });
     }
@@ -131,23 +145,73 @@ window.addEventListener("load", () => {
         inputElement.style.height = Math.min(inputElement.scrollHeight, 200) + "px";
     });
 
-    const toggleModelDetail = document.getElementById("toggle-model-detail");
-    const modelBasic = document.getElementById("model-basic");
-    const modelBasicVip = document.getElementById("model-basic-vip");
-    const modelBasicVipUnauthorized = document.getElementById("model-basic-vip-unauthorized");
-    const modelDetail = document.getElementById("model-detail");
-    const modelDetailVip = document.getElementById("model-detail-vip");
-    const modelDetailVipUnauthorized = document.getElementById("mmodel-detail-vip-unauthorized");
+    const toggleSettings = document.getElementById("toggle-settings");
+    const settingsBasic = document.getElementById("settings-basic");
+    const modelBasicVip = document.getElementById("basic-model-vip");
+    const modelBasicVipLocked = document.getElementById("basic-model-vip-locked");
+    const settingsDetail = document.getElementById("settings-detail");
+    const modelDetailVip = document.getElementById("detail-model-vip");
+    const modelDetailVipLocked= document.getElementById("detail-model-vip-locked");
 
-    toggleModelDetail.addEventListener("click", () => {
-        if (modelBasic.style.display === "none") {
-            modelBasic.style.display = "block";
-            modelDetail.style.display = "none";
-            toggleModelDetail.innerHTML = "Show more";
+    const statusElement = document.getElementById("password-status");
+    const unlockModel = () => {
+        statusElement.innerHTML = "unlocked";
+
+        modelBasicVip.style.display = "block";
+        modelBasicVipLocked.style.display = "none";
+        modelDetailVip.style.display = "block";
+        modelDetailVipLocked.style.display = "none";
+    };
+
+    toggleSettings.addEventListener("click", () => {
+        // If only basic settings are shown, show detail
+        if (settingsDetail.style.display !== "block") {
+            settingsDetail.style.display = "block";
+            settingsBasic.style.display = "none";
+            toggleSettings.innerHTML = "Show less";
+        // If detailed settings are shown, hide detail
         } else {
-            modelBasic.style.display = "none";
-            modelDetail.style.display = "block";
-            toggleModelDetail.innerHTML = "Show less";
+            settingsDetail.style.display = "none";
+            settingsBasic.style.display = "block";
+            toggleSettings.innerHTML = "Show more";
         }
     });
+
+    // NOTE: Currently this value is hardcoded in index.html
+    let model = "gpt-3.5-turbo";
+
+    const chatModels = [
+        "gpt-4",
+        "gpt-4-32k",
+        "gpt-3.5-turbo",    
+    ];
+
+    const commandInputWrapper = document.getElementById("command-input-wrapper");
+    
+    const setModel = (newModel) => {
+        model = newModel;
+        radios = document.querySelectorAll('.model input[type="radio"]');
+        for (radio of radios) {
+            radio.checked = false;
+        }
+        const id = newModel.replace(".", "_")
+        targetRadios = document.querySelectorAll(`#${id}`);
+        for (radio of targetRadios) {
+            radio.checked = true;
+        }
+        if (chatModels.includes(newModel)) {
+            // TODO: Resolve this css quirk
+            commandInputWrapper.style.display = "flex";
+        } else {
+            commandInputWrapper.style.display = "none";
+        }
+    };
+    setModel("text-davinci-003");
+
+    settingsBasic.addEventListener("change", (event) => {
+        setModel(event.target.id.replace("_", "."));
+    })
+    settingsDetail.addEventListener("change", (event) => {
+        setModel(event.target.id.replace("_", "."));
+    })
 });
