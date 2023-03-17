@@ -215,8 +215,11 @@ window.addEventListener("load", () => {
         }
         if (chatModels.includes(newModel)) {
             command.style.display = "block"
-            // TODO: Resolve this css quirk 
-            commandInputWrapper.style.display = "flex";
+            // Command input shouldn't re-appear if it's already been hidden by new message listener
+            if (messages.length == 0) {
+                // TODO: Resolve this css quirk 
+                commandInputWrapper.style.display = "flex";
+            }
         } else {
             command.style.display = "none";
             commandInputWrapper.style.display = "none";
