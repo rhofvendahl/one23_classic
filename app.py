@@ -108,9 +108,9 @@ def get_completion():
             total_tokens = response["usage"]["total_tokens"]
             completion_message = response["choices"][0]["message"]
             return jsonify({
-                "totalTokens": total_tokens,
+                "tokensUsed": total_tokens,
                 "message": completion_message,
-                "modelMaxTokens": models[model],
+                "maxTokens": models[model],
             })
 
         prompt = ""
@@ -139,9 +139,9 @@ def get_completion():
             content = content.strip()
         response_message = { "role": "assistant", "content": content }
         return jsonify({
-            "totalTokens": total_tokens,
+            "tokensUsed": total_tokens,
             "message": response_message,
-            "modelMaxTokens": models[model],
+            "maxTokens": models[model],
         })
         
     except Exception as err:

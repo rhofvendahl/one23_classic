@@ -1,7 +1,6 @@
 window.addEventListener("load", () => {
     let messages = [];
     let password = localStorage.getItem("password") || "";
-    unlocked = false;
 
     const promptElement = document.getElementById("message-prompt");
 
@@ -29,7 +28,6 @@ window.addEventListener("load", () => {
                     localStorage.setItem("password", password);
                     if (authLevel === "vip") {
                         unlockVip();
-                        unlocked = true;
                     }
                     break;
                 }
@@ -117,8 +115,9 @@ window.addEventListener("load", () => {
                 conversation += `${message.content}</div>`;
             }
             
-            const conversationElement = document.getElementById("conversation");
-            conversationElement.innerHTML = conversation;
+            document.getElementById("conversation").innerHTML = conversation;
+            document.getElementById("tokens-used").innerHTML = responseJson.tokensUsed;
+            document.getElementById("max-tokens").innerHTML = responseJson.maxTokens;
 
             promptElement.innerHTML = "";
         })
@@ -153,23 +152,21 @@ window.addEventListener("load", () => {
     const modelDetailVipLocked= document.getElementById("detail-model-vip-locked");
 
     const statusElement = document.getElementById("password-status");
+    const statusLockedElement = document.getElementById("password-status-locked");
     const unlockVip = () => {
-        statusElement.innerHTML = "unlocked";
+        statusElement.style.display = "block";
+        statusLockedElement.style.display = "none";
 
         modelBasicVip.style.display = "block";
         modelBasicVipLocked.style.display = "none";
         modelDetailVip.style.display = "block";
         modelDetailVipLocked.style.display = "none";
     };
-    statusElement.addEventListener("click", async () => {
-        if (unlocked) {
-            return;
-        }
+    statusLockedElement.addEventListener("click", async () => {
         const passwordAttempt = prompt("Enter password to unlock:");
         const authLevel = await getAuthLevel(passwordAttempt);
         if (authLevel === "vip") {
             unlockVip();
-            unlocked = true;
             localStorage.setItem("password", passwordAttempt);
         } else {
             alert("Password incorrect.");
