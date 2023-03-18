@@ -44,8 +44,10 @@ chat_models = [
     "gpt-3.5-turbo",    
 ]
 
+# NOTE: Altered to allow free use of "general" models
 def get_auth_level(password):
-    auth_level = "invalid"
+    # auth_level = "invalid"
+    auth_level = "general"
     if password == PASSWORD_VIP:
         auth_level = "vip"
     if password == PASSWORD_GENERAL:
@@ -149,4 +151,4 @@ def get_completion():
         return "", 500
 
 if __name__ == "__main__":
-    app.run(port=1234)
+    app.run()
