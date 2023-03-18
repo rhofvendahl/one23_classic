@@ -1,14 +1,14 @@
 /* 
 Palette
-131515 (Eerie Black)
+131515 (Night)
 1D2020 (Eerie Black)
 2A3135 (Gunmetal)
-42484B (Charcoal)
-5C6062 (Granite Gray)
-777A7D (Sonic Silver)
-818587 (Gray Web)
-D9DBDB (Gainsboro)
-000000 (White
+42484B (Outer space)
+5C6062 (Dim Gray)
+777A7D (Gray)
+ACAEAF (Silver)
+D9DBDB (Platinum)
+000000 (White)
 */
 
 body {
@@ -53,7 +53,7 @@ body {
 
 /* .message-command, #workaround { */
 .message-command, #workaround {
-    color: #818587;
+  color: #ACAEAF;
   font-style: italic;
 }
 
@@ -154,4 +154,8 @@ body {
 
 input[type="radio"] {
   accent-color: #1D2020;
+}
+
+.disabled-text {
+  color: #ACAEAF;
 }

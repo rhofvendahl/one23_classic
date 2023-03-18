@@ -26,12 +26,12 @@
             <div id="settings-title">Settings</div>
             <div id="basic-model" class="model">
               <div id="basic-model-vip" hidden>
-                <input type="radio" id="gpt-4" name="model" value="gpt-4">
-                <label for="gpt-4">Very good at chat</label><br>
+                <input type="radio" id="gpt-4" name="model" value="gpt-4" disabled>
+                <label for="gpt-4" class="disabled-text">Very good at chat (N/A)</label><br>
               </div>
               <div id="basic-model-vip-locked">
                 <input type="radio" id="gpt-4-locked" name="model" value="gpt-4" disabled>
-                <label for="gpt-4-locked">Very good at chat (locked)</label><br>
+                <label for="gpt-4-locked" class="disabled-text">Very good at chat (locked)</label><br>
               </div>
               <div id="model-basic-general">
                 <input type="radio" id="gpt-3_5-turbo" name="model" value="gpt-3_5-turbo">
@@ -48,20 +48,20 @@
               <div id="detail-model-vip" hidden>
                 <div>GPT-4</div>
                 
-                <input type="radio" id="gpt-4" name="model" value="gpt-4">
-                <label for="gpt-4">gpt-4 (most competent)</label><br>
+                <input type="radio" id="gpt-4" name="model" value="gpt-4" disabled>
+                <label for="gpt-4" class="disabled-text">gpt-4 (most competent; N/A)</label><br>
 
-                <input type="radio" id="gpt-4-32k" name="model" value="gpt-4-32k">
-                <label for="gpt-4-32k">gpt-4-32k (most competent, huge input)</label><br>
+                <input type="radio" id="gpt-4-32k" name="model" value="gpt-4-32k" disabled>
+                <label for="gpt-4-32k" class="disabled-text">gpt-4-32k (most competent, huge input; N/A)</label><br>
               </div>
               <div id="detail-model-vip-locked">
                 <div>GPT-4</div>
                 
                 <input type="radio" id="gpt-4-locked" name="model" value="gpt-4" disabled>
-                <label for="gpt-4-locked">gpt-4 (most competent; locked)</label><br>
+                <label for="gpt-4-locked" class="disabled-text">gpt-4 (most competent; locked)</label><br>
 
                 <input type="radio" id="gpt-4-32k-locked" name="model" value="gpt-4-32k" disabled>
-                <label for="gpt-4-32k-locked">gpt-4-32k (most competent, huge input; locked)</label><br>
+                <label for="gpt-4-32k-locked" class="disabled-text">gpt-4-32k (most competent, huge input; locked)</label><br>
               </div>
               <div id="detail-model-general">
                 <br>
@@ -89,16 +89,19 @@
                 <br>
                 <div>GPT-3</div>
 
-                <!-- <input type="radio" id="text-curie-001" name="model" value="text-curie-001">
-                <label for="aaaa">text-curie-001 (good, fast)</label><br>
+                <input type="radio" id="text-davinci-001" name="model" value="text-davinci-001" disabled>
+                <label for="text-davinci-001" class="disabled-text">text-davinci-001 (best gpt-3; N/A)</label><br>
+
+                <input type="radio" id="text-curie-001" name="model" value="text-curie-001">
+                <label for="text-curie-001">text-curie-001 (good, fast)</label><br>
 
                 <input type="radio" id="text-babbage-001" name="model" value="text-babbage-001">
                 <label for="text-babbage-001">text-babbage-001 (ok, very fast)</label><br>
 
                 <input type="radio" id="text-ada-001" name="model" value="text-ada-001">
-                <label for="text-ada-001">text-ada-001 (eh, fastest)</label><br> -->
+                <label for="text-ada-001">text-ada-001 (eh, fastest)</label><br>
 
-                <input type="radio" id="davinci" name="model" value="davinci">
+                <!-- <input type="radio" id="davinci" name="model" value="davinci">
                 <label for="davinci">davinci (best gpt-3)</label><br>
 
                 <input type="radio" id="curie" name="model" value="curie">
@@ -108,7 +111,7 @@
                 <label for="babbage">babbage (ok, very fast)</label><br>
 
                 <input type="radio" id="ada" name="model" value="ada">
-                <label for="ada">ada (eh, fastest)</label><br>
+                <label for="ada">ada (eh, fastest)</label><br> -->
               </div>
             </div>
           </form>

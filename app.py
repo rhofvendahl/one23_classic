@@ -128,6 +128,7 @@ def get_completion():
             model = model,
             prompt = prompt,
             max_tokens = 256,
+            stop=["User:"],
         )
         total_tokens = response["usage"]["total_tokens"]
         # Generally the model will stick to the prompt format, prepending "assistant: " to the response text

@@ -53,17 +53,7 @@ window.addEventListener("load", () => {
     const inputElement = document.getElementById("message-input");
     inputElement.focus();
     
-    const unavailable = [
-        "gpt-4",
-        "gpt-4-32k",
-    ];
-
     const submitUserInput = () => {
-        if (unavailable.includes(model)) {
-            alert(`Unfortunately, model "${model}" is not available at this time.`);
-            return;
-        }
-
         if (messages.length === 0) {
             const command = document.getElementById("command-input").value;
             messages.push({
