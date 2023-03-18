@@ -110,7 +110,7 @@ def get_completion():
         if not messages_valid:
             return "messages invalid", 400
         
-        got_to = 9
+        got_to = f"model: {model}; message len: {len(messages)}"
         if model in chat_models:
             response = openai.ChatCompletion.create(
                 model = model,
