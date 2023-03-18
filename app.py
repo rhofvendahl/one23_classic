@@ -148,7 +148,7 @@ def get_completion():
         
     except Exception as err:
         print(err)
-        return "", 500
+        return jsonify(err), 500
 
 if __name__ == "__main__":
     app.run()
