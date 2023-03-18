@@ -11,14 +11,11 @@
     <div id="content-wrapper">
       <div id="content">
         <h1 id="welcome">Welcome to this app!</h1>
+        <div id="workaround"></div>
         <div id="command"></div>
         <div id="conversation"></div>
         
-        <div id="command-input-wrapper">
-          <p id="command-prompt">Initial command</p>
-          <input id="command-input" type="text" name="command-input" value="You are a helpful assistant.">
-        </div>
-        <div id="message-wrapper">
+        <div id="message-input-wrapper">
           <p id="message-prompt">Enter a message</p>
           <textarea id="message-input" type="text" name="message-input"></textarea><br>
           <button id="message-submit" type="button">Submit</button>
@@ -47,7 +44,6 @@
 
           <form id="settings-detail" hidden>
             <div id="settings-title">Settings</div>
-            <p class="settings-section-title">Model</p>
             <div id="detail-model" class="model">
               <div id="detail-model-vip" hidden>
                 <div>GPT-4</div>
@@ -116,6 +112,16 @@
               </div>
             </div>
           </form>
+          <div id="workaround-input-wrapper">
+            <div class="line"></div>
+            <input type="checkbox" id="workaround-input" value="workaround">
+            <label id="workaround-label" for="workaround-checkbox">Bypass moderation</label>
+          </div>
+          <div id="command-input-wrapper">
+            <div class="line"></div>
+            <p id="command-prompt">Initial command</p>
+            <textarea id="command-input" type="text" name="command-input" value="You are a helpful assistant."></textarea>
+          </div>  
         </div>
         <button id="toggle-settings" type="button">Show more</button>
       </div>

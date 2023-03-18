@@ -63,15 +63,22 @@ window.addEventListener("load", () => {
         }
 
         if (messages.length === 0) {
-            const commandInput = document.getElementById("command-input").value;
+            const command = document.getElementById("command-input").value;
             messages.push({
                 role: "system",
-                content: commandInput,
+                content: command,
             })
+            if (document.getElementById("workaround-input").checked) {
+                document.getElementById("workaround").innerHTML = "<br>moderation bypassed"
+                // messages.push({
+                    
+                // })
+            }
         }
 
         const userInput = inputElement.value;
         inputElement.value = "";
+        document.getElementById("workaround-input-wrapper").style.display = "none";
         document.getElementById("command-input-wrapper").style.display = "none";
 
         promptElement.innerHTML = "Loading..."
@@ -190,8 +197,7 @@ window.addEventListener("load", () => {
         }
     });
 
-    // NOTE: Currently this value is hardcoded in index.html
-    let model = "gpt-3.5-turbo";
+    let model = localStorage.getItem("model") || "text-davinci-003";
 
     const chatModels = [
         "gpt-4",
@@ -199,11 +205,20 @@ window.addEventListener("load", () => {
         "gpt-3.5-turbo",    
     ];
 
-    const command = document.getElementById("command");
+    const moderatedModels = [
+        "gpt-4",
+        "gpt-4-32k",
+        "gpt-3.5-turbo",    
+    ];
+
+    const commandElement = document.getElementById("command");
     const commandInputWrapper = document.getElementById("command-input-wrapper");
+    const workaroundElement = document.getElementById("workaround");
+    const workaroundInputWrapper = document.getElementById("workaround-input-wrapper");
     
     const setModel = (newModel) => {
         model = newModel;
+        localStorage.setItem("model", newModel)
         radios = document.querySelectorAll('.model input[type="radio"]');
         for (radio of radios) {
             radio.checked = false;
@@ -214,23 +229,35 @@ window.addEventListener("load", () => {
             radio.checked = true;
         }
         if (chatModels.includes(newModel)) {
-            command.style.display = "block"
+            commandElement.style.display = "block"
             // Command input shouldn't re-appear if it's already been hidden by new message listener
             if (messages.length == 0) {
                 // TODO: Resolve this css quirk 
                 commandInputWrapper.style.display = "flex";
             }
         } else {
-            command.style.display = "none";
+            console.log("Should be hiding all command stuff");
+            commandElement.style.display = "none";
             commandInputWrapper.style.display = "none";
         }
+        if (moderatedModels.includes(newModel)) {
+            workaroundElement.style.display = "block"
+            // Command input shouldn't re-appear if it's already been hidden by new message listener
+            if (messages.length === 0) {
+                workaroundInputWrapper.style.display = "block";
+            }
+        } else {
+            console.log("Should be hiding all workaround stuff");
+            workaroundElement.style.display = "none";
+            workaroundInputWrapper.style.display = "none";
+        }
     };
-    setModel("text-davinci-003");
+    setModel(model);
 
     settingsBasic.addEventListener("change", (event) => {
         setModel(event.target.id.replace("_", "."));
-    })
+    });
     settingsDetail.addEventListener("change", (event) => {
         setModel(event.target.id.replace("_", "."));
-    })
+    });
 });

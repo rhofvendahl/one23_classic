@@ -36,7 +36,7 @@ body {
 
 #content {
   margin: 0 auto;
-  margin-top: 8rem;
+  margin-top: 8em;
   width: 100%;
   max-width: 600px;
 }
@@ -51,7 +51,7 @@ body {
   white-space: pre-wrap;
 }
 
-.message-command {
+.message-command, #workaround {
   color: #818587;
   font-style: italic;
 }
@@ -68,12 +68,20 @@ body {
   font-weight: bold;
 }
 
-#message-prompt, #command-prompt {
+#message-prompt {
   font-style: italic;
-  color: #D9DBDB;
 }
 
-#message-wrapper, #command-input-wrapper {
+#command-prompt {
+  margin-top: 0;
+}
+
+#message-input-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+#command-input-wrapper {
   display: flex;
   flex-direction: column;
 }
@@ -128,14 +136,10 @@ body {
   margin-bottom: .5em;
 }
 
-.settings-section-title {
-  font-size: 1.2em;
-}
-
 .line {
   border-top: 1px solid #42484B;
-  margin-top: .5em;
-  margin-bottom: .5em;
+  margin-top: 1em;
+  margin-bottom: 1em;
 }
 
 #toggle-settings {
