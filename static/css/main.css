@@ -39,7 +39,7 @@ body {
 
 #tokens {
   margin-top: .5em;
-  float: right;
+  text-align: right;
 }
 
 #content-wrapper {
