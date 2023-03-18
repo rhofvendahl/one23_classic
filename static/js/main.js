@@ -1,6 +1,7 @@
 window.addEventListener("load", () => {
     let messages = [];
     let password = localStorage.getItem("password") || "";
+    unlocked = false;
 
     const promptElement = document.getElementById("message-prompt");
 
@@ -12,13 +13,13 @@ window.addEventListener("load", () => {
             },
             body: JSON.stringify({
                 password: passwordAttempt,
-            })
+            }),
         })
         .then(response => response.json())
         .then(responseJson => {
             return responseJson.authLevel;
         });
-    }
+    };
 
     const checkPassword = async () => {
         try {
@@ -28,10 +29,11 @@ window.addEventListener("load", () => {
                     localStorage.setItem("password", password);
                     if (authLevel === "vip") {
                         unlockVip();
+                        unlocked = true;
                     }
                     break;
                 }
-                promptMessage = "Please enter password:"
+                let promptMessage = "Please enter password:";
                 if (password !== "") {
                     promptMessage = "Password incorrect.\n\n" + promptMessage;
                 }
@@ -67,9 +69,9 @@ window.addEventListener("load", () => {
             messages.push({
                 role: "system",
                 content: command,
-            })
+            });
             // if (document.getElementById("workaround-input").checked) {
-            //     document.getElementById("workaround").innerHTML = "<br>moderation bypassed"
+            //     document.getElementById("workaround").innerHTML = "<br>moderation bypassed";
             //     // Push jailbreak prompt
             // }
         }
@@ -79,12 +81,12 @@ window.addEventListener("load", () => {
         // document.getElementById("workaround-input-wrapper").style.display = "none";
         document.getElementById("command-input-wrapper").style.display = "none";
 
-        promptElement.innerHTML = "Loading..."
+        promptElement.innerHTML = "Loading...";
 
         messages.push({
             role: "user",
             content: userInput.trim(),
-        })
+        });
         
         fetch("/get-completion", {
             method: "POST",
@@ -95,7 +97,7 @@ window.addEventListener("load", () => {
                 password,
                 model,
                 messages,
-            })
+            }),
         })
         .then(response => response.json())
         .then(responseJson => {
@@ -103,9 +105,9 @@ window.addEventListener("load", () => {
             
             const roleMap = {
                 user: "User",
-                assistant: "Model"
+                assistant: "Model",
             }
-            let conversation = ""
+            let conversation = "";
             for (message of messages) {
                 if (message.role === "system") {
                     const command = `<br><div class="message-command">command: "${message.content}"</div>`;
@@ -122,7 +124,7 @@ window.addEventListener("load", () => {
                 } else {
                     conversation += " ";
                 }
-                conversation += `${message.content}</div>`
+                conversation += `${message.content}</div>`;
             }
             
             const conversationElement = document.getElementById("conversation");
@@ -170,14 +172,17 @@ window.addEventListener("load", () => {
         modelDetailVipLocked.style.display = "none";
     };
     statusElement.addEventListener("click", async () => {
+        if (unlocked) {
+            return;
+        }
         const passwordAttempt = prompt("Enter password to unlock:");
         const authLevel = await getAuthLevel(passwordAttempt);
         if (authLevel === "vip") {
             unlockVip();
+            unlocked = true;
             localStorage.setItem("password", passwordAttempt);
-            alert("Unlocked.");
         } else {
-            alert("Password incorrect.")
+            alert("Password incorrect.");
         }
     });
 
@@ -216,18 +221,18 @@ window.addEventListener("load", () => {
     
     const setModel = (newModel) => {
         model = newModel;
-        localStorage.setItem("model", newModel)
+        localStorage.setItem("model", newModel);
         radios = document.querySelectorAll('.model input[type="radio"]');
         for (radio of radios) {
             radio.checked = false;
         }
-        const id = newModel.replace(".", "_")
+        const id = newModel.replace(".", "_");
         targetRadios = document.querySelectorAll(`#${id}`);
         for (radio of targetRadios) {
             radio.checked = true;
         }
         if (chatModels.includes(newModel)) {
-            commandElement.style.display = "block"
+            commandElement.style.display = "block";
             // Command input shouldn't re-appear if it's already been hidden by new message listener
             if (messages.length == 0) {
                 // TODO: Resolve this css quirk 
