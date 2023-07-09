@@ -67,12 +67,12 @@ body {
 
 /* .message-command, #workaround { */
 .message-command, #workaround {
-  color: #ACAEAF;
+  color: #D9DBDB;
   font-style: italic;
 }
 
 .message-user {
-  color: #D9DBDB;
+  color: #ACAEAF;
 }
 
 .message-model {
