@@ -1,10 +1,5 @@
 window.addEventListener("load", () => {
-    let messages = [];
-    let password = localStorage.getItem("password") || "";
-
-    const promptElement = document.getElementById("message-prompt");
-
-    const getAuthLevel = async (passwordAttempt) => {
+    const checkPassword = async (passwordAttempt) => {
         return await fetch("/check-password", {
             method: "POST",
             headers: {
@@ -19,34 +14,86 @@ window.addEventListener("load", () => {
             return responseJson.authLevel;
         });
     };
+    
+    const unlockVip = () => {
+        const modelBasicVip = document.getElementById("basic-model-vip");
+        const modelBasicVipLocked = document.getElementById("basic-model-vip-locked");
+        const modelDetailVip = document.getElementById("detail-model-vip");
+        const modelDetailVipLocked= document.getElementById("detail-model-vip-locked");
+        const statusElement = document.getElementById("password-status");
+        const statusLockedElement = document.getElementById("password-status-locked");
 
-    const checkPassword = async () => {
+        statusElement.style.display = "block";
+        statusLockedElement.style.display = "none";
+        
+        modelBasicVip.style.display = "block";
+        modelBasicVipLocked.style.display = "none";
+        modelDetailVip.style.display = "block";
+        modelDetailVipLocked.style.display = "none";
+    };
+
+    const attemptVip = async () => {
+        const passwordAttempt = prompt("Enter password to unlock VIP:");
+        const passwordStatus = await checkPassword(passwordAttempt);
+        if (passwordStatus === "vip") {
+            unlockVip();
+            localStorage.setItem("password", passwordAttempt);
+        } else {
+            alert("Password incorrect.");
+        }
+    }
+
+    const gatekeep = async () => {
         try {
-            while (true) {
-                authLevel = await getAuthLevel(password);
-                if (["general", "vip"].includes(authLevel)) {
-                    localStorage.setItem("password", password);
-                    if (authLevel === "vip") {
-                        unlockVip();
-                    }
-                    break;
+            let passwordStatus = await checkPassword(password);
+            
+            while (passwordStatus === "invalid") {
+                if (password === "") {
+                    password = prompt("Please enter password:");
+                } else {
+                    password = prompt("Password incorrect.\n\nPlease enter password:");
                 }
-                let promptMessage = "Please enter password:";
-                if (password !== "") {
-                    promptMessage = "Password incorrect.\n\n" + promptMessage;
-                }
-                password = prompt(promptMessage);
+                passwordStatus = await checkPassword(password);
             }
+            if (passwordStatus === "vip") {
+                unlockVip();
+            }
+            localStorage.setItem("password", password);
         } catch (err) {
             console.error(err);
             document.getElementById("messagePrompt").innerHTML = "Internal error";
             alert("There was an internal error, please reload and try again.");
-
         }
     }
 
-    checkPassword();
+    let password = localStorage.getItem("password") || "";
 
+    // General models are currently free to use
+    // gatekeep();
+
+    // Instead, check for vip password once for new users or else set auth quietly
+    const gatekeepPermissive = async () => {
+        if (password === "") {
+            attemptVip();
+            localStorage.setItem("password", "not_vip");
+        } else {
+            const passwordStatus = await checkPassword(password);
+            if (passwordStatus === "vip") {
+                unlockVip();
+            }
+        }
+    }
+
+    gatekeepPermissive();
+
+    const statusLockedElement = document.getElementById("password-status-locked");
+    statusLockedElement.addEventListener("click", async () => {
+        attemptVip();
+    });
+
+    let messages = [];
+
+    const promptElement = document.getElementById("message-prompt");
     const submitElement = document.getElementById("message-submit");
     const inputElement = document.getElementById("message-input");
     inputElement.focus();
@@ -145,34 +192,8 @@ window.addEventListener("load", () => {
 
     const toggleSettings = document.getElementById("toggle-settings");
     const settingsBasic = document.getElementById("settings-basic");
-    const modelBasicVip = document.getElementById("basic-model-vip");
-    const modelBasicVipLocked = document.getElementById("basic-model-vip-locked");
     const settingsDetail = document.getElementById("settings-detail");
-    const modelDetailVip = document.getElementById("detail-model-vip");
-    const modelDetailVipLocked= document.getElementById("detail-model-vip-locked");
-
-    const statusElement = document.getElementById("password-status");
-    const statusLockedElement = document.getElementById("password-status-locked");
-    const unlockVip = () => {
-        statusElement.style.display = "block";
-        statusLockedElement.style.display = "none";
-
-        modelBasicVip.style.display = "block";
-        modelBasicVipLocked.style.display = "none";
-        modelDetailVip.style.display = "block";
-        modelDetailVipLocked.style.display = "none";
-    };
-    statusLockedElement.addEventListener("click", async () => {
-        const passwordAttempt = prompt("Enter password to unlock:");
-        const authLevel = await getAuthLevel(passwordAttempt);
-        if (authLevel === "vip") {
-            unlockVip();
-            localStorage.setItem("password", passwordAttempt);
-        } else {
-            alert("Password incorrect.");
-        }
-    });
-
+    
     toggleSettings.addEventListener("click", () => {
         // If only basic settings are shown, show detail
         if (settingsDetail.style.display !== "block") {

@@ -5,7 +5,8 @@ import openai
 from dotenv import load_dotenv
 load_dotenv()
 
-openai.api_key = os.getenv("OPENAI_API_KEY")
+# openai.api_key = os.getenv("OPENAI_API_KEY")
+# print("API KEY", os.getenv("OPENAI_API_KEY"))
 
 app = Flask(__name__)
 
@@ -44,10 +45,13 @@ chat_models = [
     "gpt-3.5-turbo",    
 ]
 
-# NOTE: Altered to allow free use of "general" models
+gpt4_models = [
+    "gpt-4",
+    "gpt-4-32k",
+]
+
 def get_auth_level(password):
-    # auth_level = "invalid"
-    auth_level = "general"
+    auth_level = "invalid"
     if password == PASSWORD_VIP:
         auth_level = "vip"
     if password == PASSWORD_GENERAL:
@@ -77,6 +81,9 @@ def get_completion():
             return "request missing data", 400
 
         auth_level = get_auth_level(data["password"])
+        # Make general models free to use
+        if auth_level == "invalid":
+            auth_level = "general"
         if not auth_level in ["vip", "general"]:
             return "password invalid", 401
         
@@ -101,8 +108,14 @@ def get_completion():
         if not messages_valid:
             return "messages invalid", 400
         
+        if model in gpt4_models:
+            api_key = os.getenv("GPT4_OPENAI_KEY")
+        else:
+            api_key = os.getenv("DEFAULT_OPENAI_KEY")
+        
         if model in chat_models:
             response = openai.ChatCompletion.create(
+                api_key = api_key,
                 model = model,
                 messages = messages,
                 max_tokens = 256,
@@ -127,6 +140,7 @@ def get_completion():
             prompt += roleMap[message["role"]] + ": " + message["content"] + "\n\n"
         prompt += "AI: "
         response = openai.Completion.create(
+            api_key = api_key,
             model = model,
             prompt = prompt,
             max_tokens = 256,
@@ -151,4 +165,4 @@ def get_completion():
         return "", 500
 
 if __name__ == "__main__":
-    app.run()
+    app.run(port=5001)
