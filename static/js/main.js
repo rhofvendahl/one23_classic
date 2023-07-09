@@ -98,7 +98,7 @@ window.addEventListener("load", () => {
             let conversation = "";
             for (message of messages) {
                 if (message.role === "system") {
-                    const command = `<br><div class="message-command">command: "${message.content}"</div>`;
+                    const command = `<br><div class="message-command">initial command: "${message.content}"</div>`;
                     const commandElement = document.getElementById("command");
                     commandElement.innerHTML = command;
                     continue;
