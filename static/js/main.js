@@ -64,14 +64,14 @@ window.addEventListener("load", () => {
     const gatekeepPermissive = async () => {
         if (password === "") {
             password = prompt("Enter password to unlock VIP:");
-            const passwordStatus = await checkPassword(passwordAttempt);
+            const passwordStatus = await checkPassword(password);
             if (passwordStatus === "vip") {
                 unlockVip();
             } else {
                 password = "not_vip";
                 alert("Password incorrect.");
             }
-            localStorage.setItem("password", passwordAttempt);
+            localStorage.setItem("password", password);
         } else {
             const passwordStatus = await checkPassword(password);
             if (passwordStatus === "vip") {
