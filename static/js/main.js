@@ -32,17 +32,6 @@ window.addEventListener("load", () => {
         modelDetailVipLocked.style.display = "none";
     };
 
-    const attemptVip = async () => {
-        const passwordAttempt = prompt("Enter password to unlock VIP:");
-        const passwordStatus = await checkPassword(passwordAttempt);
-        if (passwordStatus === "vip") {
-            unlockVip();
-            localStorage.setItem("password", passwordAttempt);
-        } else {
-            alert("Password incorrect.");
-        }
-    }
-
     const gatekeep = async () => {
         try {
             let passwordStatus = await checkPassword(password);
@@ -74,8 +63,15 @@ window.addEventListener("load", () => {
     // Instead, check for vip password once for new users or else set auth quietly
     const gatekeepPermissive = async () => {
         if (password === "") {
-            attemptVip();
-            localStorage.setItem("password", "not_vip");
+            password = prompt("Enter password to unlock VIP:");
+            const passwordStatus = await checkPassword(passwordAttempt);
+            if (passwordStatus === "vip") {
+                unlockVip();
+            } else {
+                password = "not_vip";
+                alert("Password incorrect.");
+            }
+            localStorage.setItem("password", passwordAttempt);
         } else {
             const passwordStatus = await checkPassword(password);
             if (passwordStatus === "vip") {
@@ -87,8 +83,17 @@ window.addEventListener("load", () => {
     gatekeepPermissive();
 
     const statusLockedElement = document.getElementById("password-status-locked");
+    // TODO: Refactor this with other VIP stuff
     statusLockedElement.addEventListener("click", async () => {
-        attemptVip();
+        const passwordAttempt = prompt("Enter password to unlock VIP:");
+        const passwordStatus = await checkPassword(passwordAttempt);
+        if (passwordStatus === "vip") {
+            unlockVip();
+            password = passwordAttempt;
+            localStorage.setItem("password", passwordAttempt);
+        } else {
+            alert("Password incorrect.");
+        }
     });
 
     let messages = [];
