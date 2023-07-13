@@ -30,6 +30,8 @@ window.addEventListener("load", () => {
         modelBasicVipLocked.style.display = "none";
         modelDetailVip.style.display = "block";
         modelDetailVipLocked.style.display = "none";
+
+        setModel("gpt-4");
     };
 
     const gatekeep = async () => {
