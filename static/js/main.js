@@ -111,15 +111,10 @@ window.addEventListener("load", () => {
                 role: "system",
                 content: command,
             });
-            // if (document.getElementById("workaround-input").checked) {
-            //     document.getElementById("workaround").innerHTML = "<br>moderation bypassed";
-            //     // Push jailbreak prompt
-            // }
         }
 
         const userInput = inputElement.value;
         inputElement.value = "";
-        // document.getElementById("workaround-input-wrapper").style.display = "none";
         document.getElementById("command-input-wrapper").style.display = "none";
 
         promptElement.innerHTML = "Loading...";
@@ -236,16 +231,8 @@ window.addEventListener("load", () => {
         "text-davinci-003",
     ];
 
-    // const moderatedModels = [
-    //     "gpt-4",
-    //     "gpt-4-32k",
-    //     "gpt-3.5-turbo",    
-    // ];
-
     const commandElement = document.getElementById("command");
     const commandInputWrapper = document.getElementById("command-input-wrapper");
-    // const workaroundElement = document.getElementById("workaround");
-    // const workaroundInputWrapper = document.getElementById("workaround-input-wrapper");
     
     const setModel = (newModel) => {
         model = newModel;
@@ -274,17 +261,6 @@ window.addEventListener("load", () => {
             commandElement.style.display = "none";
             commandInputWrapper.style.display = "none";
         }
-        // if (moderatedModels.includes(newModel)) {
-        //     workaroundElement.style.display = "block"
-        //     // Command input shouldn't re-appear if it's already been hidden by new message listener
-        //     if (messages.length === 0) {
-        //         workaroundInputWrapper.style.display = "block";
-        //     }
-        // } else {
-        //     console.log("Should be hiding all workaround stuff");
-        //     workaroundElement.style.display = "none";
-        //     workaroundInputWrapper.style.display = "none";
-        // }
     };
     setModel(model);
 

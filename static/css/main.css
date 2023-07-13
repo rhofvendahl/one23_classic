@@ -65,8 +65,7 @@ body {
   white-space: pre-wrap;
 }
 
-/* .message-command, #workaround { */
-.message-command, #workaround {
+.message-command {
   color: #D9DBDB;
   font-style: italic;
 }
