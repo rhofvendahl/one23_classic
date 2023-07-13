@@ -199,18 +199,26 @@ window.addEventListener("load", () => {
     const toggleSettings = document.getElementById("toggle-settings");
     const settingsBasic = document.getElementById("settings-basic");
     const settingsDetail = document.getElementById("settings-detail");
+
+    const showDetail = () => {
+        settingsDetail.style.display = "block";
+        settingsBasic.style.display = "none";
+        toggleSettings.innerHTML = "Show less";
+    };
+
+    const hideDetail = () => {
+        settingsDetail.style.display = "none";
+        settingsBasic.style.display = "block";
+        toggleSettings.innerHTML = "Show more";
+    };
     
     toggleSettings.addEventListener("click", () => {
         // If only basic settings are shown, show detail
         if (settingsDetail.style.display !== "block") {
-            settingsDetail.style.display = "block";
-            settingsBasic.style.display = "none";
-            toggleSettings.innerHTML = "Show less";
+            showDetail();
         // If detailed settings are shown, hide detail
         } else {
-            settingsDetail.style.display = "none";
-            settingsBasic.style.display = "block";
-            toggleSettings.innerHTML = "Show more";
+            hideDetail();
         }
     });
 
@@ -220,6 +228,12 @@ window.addEventListener("load", () => {
         "gpt-4",
         "gpt-4-32k",
         "gpt-3.5-turbo",    
+    ];
+
+    const startModels = [
+        "gpt-4",
+        "gpt-3.5-turbo",
+        "text-davinci-003",
     ];
 
     // const moderatedModels = [
@@ -245,6 +259,10 @@ window.addEventListener("load", () => {
         for (radio of targetRadios) {
             radio.checked = true;
         }
+        // Expand to show more if appropriate
+        if (!startModels.includes(model)) {
+            showDetail();
+        }
         if (chatModels.includes(newModel)) {
             commandElement.style.display = "block";
             // Command input shouldn't re-appear if it's already been hidden by new message listener
@@ -253,7 +271,6 @@ window.addEventListener("load", () => {
                 commandInputWrapper.style.display = "flex";
             }
         } else {
-            console.log("Should be hiding all command stuff");
             commandElement.style.display = "none";
             commandInputWrapper.style.display = "none";
         }
