@@ -30,8 +30,6 @@ window.addEventListener("load", () => {
         modelBasicVipLocked.style.display = "none";
         modelDetailVip.style.display = "block";
         modelDetailVipLocked.style.display = "none";
-
-        setModel("gpt-4");
     };
 
     const gatekeep = async () => {
@@ -69,6 +67,7 @@ window.addEventListener("load", () => {
             const passwordStatus = await checkPassword(password);
             if (passwordStatus === "vip") {
                 unlockVip();
+                setModel("gpt-4");
             } else {
                 password = "not_vip";
                 alert("Password incorrect.");
