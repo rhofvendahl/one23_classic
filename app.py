@@ -21,10 +21,11 @@ models = {
     "gpt-3.5-turbo": 4096,
     "text-davinci-003": 4096,
     "text-davinci-002": 4096,
-    "code-davinci-002": 8001, # (gpt-3.5 AND codex)
-    # codex
-    "code-cushman-001": 2048,
+    # "code-davinci-002": 8001, # (gpt-3.5 AND codex)
+    # # codex
+    # "code-cushman-001": 2048,
     # gpt-3
+    "text-davinci-001": 2049,
     "text-curie-001": 2049,
     "text-babbage-001": 2049,
     "text-ada-001": 2049,
