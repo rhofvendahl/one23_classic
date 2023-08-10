@@ -143,29 +143,40 @@ window.addEventListener("load", () => {
                 user: "User",
                 assistant: "Model",
             }
-            let conversation = "";
+            convElement = document.getElementById("conversation");
+            convElement.innerHTML = "";
             for (message of messages) {
-                if (message.role === "system") {
-                    const command = `<br><div class="message-command">initial command: "${message.content}"</div>`;
-                    const commandElement = document.getElementById("command");
-                    commandElement.innerHTML = command;
-                    continue;
-                } else if (message.role === "user") {
-                    conversation += `<br><div class="message-user"><span class="role-user">User:</span>`;
-                } else {
-                    conversation += `<br><div class="message-model"><span class="role-model">Model:</span>`;
-                }
-                if (message.content.includes("\n")) {
-                    conversation += "\n";
-                } else {
-                    conversation += " ";
-                }
-                conversation += `${message.content}</div>`;
+              convElement.appendChild(document.createElement("br"));
+              const newDiv = document.createElement("div");
+              const separator = message.content.includes("\n") ? "\n" : " ";
+              if (message.role === "system") {
+                  newDiv.classList.add("message-command");
+                  newDiv.innerText = `initial command:${separator}"${message.content}"`
+                  convElement.appendChild(newDiv);
+                  continue;
+              } else if (message.role === "user") {
+                roleSpan = document.createElement("span");
+                roleSpan.classList.add("role-user");
+                roleSpan.innerText = "User:"
+                contentText = document.createTextNode(`${separator}${message.content}`);
+                newDiv.classList.add("message-user");
+                newDiv.appendChild(roleSpan);
+                newDiv.appendChild(contentText);
+                convElement.appendChild(newDiv);
+              } else {
+                newDiv.classList.add("message-model");
+                roleSpan = document.createElement("span");
+                roleSpan.classList.add("role-model");
+                roleSpan.innerText = "Model:"
+                contentText = document.createTextNode(`${separator}${message.content}`);
+                newDiv.classList.add("message-model");
+                newDiv.appendChild(roleSpan);
+                newDiv.appendChild(contentText);
+                convElement.appendChild(newDiv);
+              }
             }
-            
-            document.getElementById("conversation").innerHTML = conversation;
-            document.getElementById("tokens-used").innerHTML = responseJson.tokensUsed;
-            document.getElementById("max-tokens").innerHTML = responseJson.maxTokens;
+            document.getElementById("tokens-used").innerText = responseJson.tokensUsed;
+            document.getElementById("max-tokens").innerText = responseJson.maxTokens;
 
             promptElement.innerHTML = "";
         })
