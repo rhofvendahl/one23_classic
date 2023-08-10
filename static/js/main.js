@@ -180,9 +180,11 @@ window.addEventListener("load", () => {
         submitUserInput();
     });
 
-    inputElement.addEventListener("keydown", (event) => {
+    inputElement.addEventListener("keyup", (event) => {
         if (event.key === "Enter" && !event.shiftKey) {
             submitUserInput();
+            // Prevent 'enter' from creating newline
+            event.preventDefault();
         }
     });
     
